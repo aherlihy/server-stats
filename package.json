@@ -1,0 +1,38 @@
+{
+  "name": "mongodb-server-stats",
+  "description": "MongoDB Server Stats UI Component",
+  "author": "Durran Jordan <durran@gmail.com>",
+  "bugs": "https://github.com/mongodb-js/server-stats/issues",
+  "homepage": "https://github.com/mongodb-js/server-stats",
+  "version": "0.4.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mongodb-js/server-stats.git"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "mongodb-js"
+  ],
+  "scripts": {
+    "ci": "npm run check && npm test",
+    "test": "mocha",
+    "fmt": "mongodb-js-fmt ./*.js ./test/*.js",
+    "check": "mongodb-js-precommit"
+  },
+  "precommit": [
+    "check"
+  ],
+  "dependencies": {
+    "react": "^15.2.0",
+    "react-dom": "^15.2.0",
+    "reflux": "^0.4.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint-config-mongodb-js": "^1.0.6",
+    "mocha": "^2.5.3",
+    "mongodb-js-fmt": "^0.0.3",
+    "mongodb-js-precommit": "^0.2.8",
+    "pre-commit": "^1.1.2"
+  }
+}
