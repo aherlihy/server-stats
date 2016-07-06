@@ -12,6 +12,8 @@ class CurrentOp extends React.Component {
    * The current op component should be initialized with a 'store'
    * property, that triggers with the result of a { currentOp: 1 }
    * command.
+   *
+   * @param {Object} props - The component properties.
    */
   constructor(props) {
     super(props);

@@ -17,7 +17,7 @@
     "ci": "npm run check && npm test",
     "test": "mocha",
     "fmt": "mongodb-js-fmt ./*.js ./test/*.js",
-    "check": "mongodb-js-precommit",
+    "check": "mongodb-js-precommit ./src ./test",
     "prepublish": "babel ./src --out-dir ./lib --presets react",
     "pretest": "babel ./src --out-dir ./lib --presets react"
   },
@@ -34,10 +34,11 @@
     "babel-preset-react": "^6.11.1",
     "babel-register": "^6.9.0",
     "chai": "^3.5.0",
-    "eslint-config-mongodb-js": "^1.0.6",
+    "eslint-config-mongodb-js": "^2.0.0",
+    "eslint-plugin-react": "^5.2.2",
     "mocha": "^2.5.3",
     "mongodb-js-fmt": "^0.0.3",
     "mongodb-js-precommit": "^0.2.8",
-    "pre-commit": "^1.1.2"
+    "pre-commit": "^1.1.3"
   }
 }
