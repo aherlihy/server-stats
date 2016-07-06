@@ -18,8 +18,8 @@ const Actions = require('mongodb-server-stats').Actions;
  *    const CurrentOpComponent = require('mongodb-server-stats').CurrentOpComponent;
  *    const CurrentOpStore = require('./current-op-store');
  *
- *    var element = <CurrentOp store={CurrentOpStore} />;
- *    ReactDOM.render(element, document.getElementById('current-op-container'));
+ *    var component = <CurrentOpComponent store={CurrentOpStore} />;
+ *    ReactDOM.render(component, document.getElementById('current-op-container'));
  *
  */
 const CurrentOpStore = Reflux.createStore({
