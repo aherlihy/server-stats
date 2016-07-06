@@ -10,6 +10,17 @@ const Actions = require('mongodb-server-stats').Actions;
  * behaviour the store MUST provide is that it listens to the
  * 'pollCurrentOp' action, fetches the currentOp data, and
  * triggers with the result of the command.
+ *
+ * This store would be passed as a property to the CurrentOp
+ * component:
+ *
+ *    const ReactDOM = require('react-dom');
+ *    const CurrentOpComponent = require('mongodb-server-stats').CurrentOpComponent;
+ *    const CurrentOpStore = require('./current-op-store');
+ *
+ *    var element = <CurrentOp store={CurrentOpStore} />;
+ *    ReactDOM.render(element, document.getElementById('current-op-container'));
+ *
  */
 const CurrentOpStore = Reflux.createStore({
 
