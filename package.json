@@ -4,7 +4,7 @@
   "author": "Durran Jordan <durran@gmail.com>",
   "bugs": "https://github.com/mongodb-js/server-stats/issues",
   "homepage": "https://github.com/mongodb-js/server-stats",
-  "version": "0.4.0",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/mongodb-js/server-stats.git"
@@ -17,7 +17,9 @@
     "ci": "npm run check && npm test",
     "test": "mocha",
     "fmt": "mongodb-js-fmt ./*.js ./test/*.js",
-    "check": "mongodb-js-precommit"
+    "check": "mongodb-js-precommit",
+    "prepublish": "babel ./src --out-dir ./lib --presets react",
+    "pretest": "babel ./src --out-dir ./lib --presets react"
   },
   "precommit": [
     "check"
@@ -28,6 +30,9 @@
     "reflux": "^0.4.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-preset-react": "^6.11.1",
+    "babel-register": "^6.9.0",
     "chai": "^3.5.0",
     "eslint-config-mongodb-js": "^1.0.6",
     "mocha": "^2.5.3",
