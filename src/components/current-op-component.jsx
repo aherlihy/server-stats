@@ -62,6 +62,6 @@ class CurrentOpComponent extends React.Component {
   }
 }
 
-CurrentOp.displayName = 'CurrentOp';
+CurrentOpComponent.displayName = 'CurrentOpComponent';
 
-module.exports = CurrentOp;
+module.exports = CurrentOpComponent;
