@@ -58,7 +58,29 @@ class CurrentOpComponent extends React.Component {
    * @returns {React.Component} The component.
    */
   render() {
-    return (<div>{this.state.data}</div>);
+    return (
+      <div>
+        {this.state.error ? this.renderError() : this.renderGraph()}
+      </div>
+    );
+  }
+
+  /**
+   * Render the error message in the component.
+   *
+   * @returns {String} The error message.
+   */
+  renderError() {
+    return this.state.error.message;
+  }
+
+  /**
+   * Render the graph in the component.
+   *
+   * @todo: Implement.
+   */
+  renderGraph() {
+    return JSON.stringify(this.state.data, null, 2);
   }
 }
 
