@@ -38,7 +38,7 @@ const CurrentOpStore = Reflux.createStore({
    * there was one.
    */
   currentOp: function() {
-    app.dataService.currentOp((error, doc) => {
+    app.dataService.currentOp(true, (error, doc) => {
       this.trigger(error, doc);
     });
   }
