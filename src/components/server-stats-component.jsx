@@ -4,13 +4,13 @@ const React = require('react');
 const Actions = require('../actions');
 
 /**
- * Represents the component that renders the current op information.
+ * Represents the component that renders the server status information.
  */
-class CurrentOpComponent extends React.Component {
+class ServerStatsComponent extends React.Component {
 
   /**
-   * The current op component should be initialized with a 'store'
-   * property, that triggers with the result of a { currentOp: 1 }
+   * The server stats component should be initialized with a 'store'
+   * property, that triggers with the result of a { serverStatus: 1 }
    * command.
    *
    * @param {Object} props - The component properties.
@@ -28,7 +28,7 @@ class CurrentOpComponent extends React.Component {
   componentDidMount() {
     this.unsubscribeRefresh = this.props.store.listen(this.refresh.bind(this));
     this.intervalId = setInterval(() => {
-      Actions.pollCurrentOp();
+      Actions.pollServerStats();
     }, this.props.interval);
   }
 
@@ -42,7 +42,7 @@ class CurrentOpComponent extends React.Component {
   }
 
   /**
-   * Refreshes the component state with the new current op data that was
+   * Refreshes the component state with the new server status data that was
    * received from the store.
    *
    * @param {Error} error - The error, if any occured.
@@ -80,10 +80,10 @@ class CurrentOpComponent extends React.Component {
    * @todo: Implement.
    */
   renderGraph() {
-    return 'CURRENT-OP=' + JSON.stringify(this.state.data, null, 2);
+    return 'SERVER-STATS=' + JSON.stringify(this.state.data, null, 2);
   }
 }
 
-CurrentOpComponent.displayName = 'CurrentOpComponent';
+ServerStatsComponent.displayName = 'ServerStatsComponent';
 
-module.exports = CurrentOpComponent;
+module.exports = ServerStatsComponent;
