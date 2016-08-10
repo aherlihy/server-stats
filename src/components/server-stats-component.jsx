@@ -2,6 +2,8 @@
 
 const React = require('react');
 const Actions = require('../actions');
+const Minichart = require('./minichart');
+
 
 /**
  * Represents the component that renders the server status information.
@@ -80,8 +82,19 @@ class ServerStatsComponent extends React.Component {
    * @todo: Implement.
    */
   renderGraph() {
-    return 'SERVER-STATS=' + JSON.stringify(this.state.data, null, 2);
+    if (this.state.data && 'localTime' in this.state.data) {
+      return (
+        <div className="myminichart">
+          <Minichart
+            data={this.state.data} // expects data to be an array of opcounters objs
+            graph_type="sschart"
+          />
+        </div>
+      );
+    }
   }
+
+
 }
 
 ServerStatsComponent.displayName = 'ServerStatsComponent';

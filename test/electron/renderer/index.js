@@ -20,7 +20,7 @@ ReactDOM.render(
   document.getElementById('currentOpContainer') // eslint-disable-line no-undef
 );
 ReactDOM.render(
-    React.createElement(ServerStatsComponent, { store: ServerStatsStore, interval: 2000 }),
+    React.createElement(ServerStatsComponent, { store: ServerStatsStore, interval: 1000 }),
     document.getElementById('serverStatsContainer') // eslint-disable-line no-undef
 );
 ReactDOM.render(
