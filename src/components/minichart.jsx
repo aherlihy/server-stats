@@ -8,10 +8,9 @@ const vizFns = require('../d3');
 const Minichart = React.createClass({
 
   propTypes: {
-    fieldName: React.PropTypes.string.isRequired,
-    type: React.PropTypes.object.isRequired
+    data: React.PropTypes.array.isRequired,
+    graph_type:React.PropTypes.string.isRequired
   },
-
   getInitialState() {
     return {
       containerWidth: null,
@@ -48,18 +47,17 @@ const Minichart = React.createClass({
 
   minichartFactory() {
     /* eslint camelcase: 0 */
-    // return (
-    //   <D3Component
-    //     fieldName={'MyFieldName'}
-    //     type={this.props.type}
-    //     renderMode="svg"
-    //     query={"testQuery"}
-    //     width={width}
-    //     height={100}
-    //     fn={fn}
-    //   />
-    // );
-    return ( <div>SOMETHING</div>);
+    fn = vizFns[this.props.graph_type];
+    console.log(this.props.data);
+    return (
+      <D3Component
+        data={this.props.data}
+        renderMode="svg"
+        width={100}
+        height={100}
+        d3fn={fn}
+      />
+    );
   },
 
   render() {
