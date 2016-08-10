@@ -8,13 +8,11 @@ const _ = require('lodash');
 const D3Component = React.createClass({
 
     propTypes: {
-        fieldName: React.PropTypes.string.isRequired,
-        type: React.PropTypes.object.isRequired,
+        data: React.PropTypes.array.isRequired,
         renderMode: React.PropTypes.oneOf(['svg', 'div']),
         width: React.PropTypes.number,
         height: React.PropTypes.number,
-        fn: React.PropTypes.func.isRequired,
-        query: React.PropTypes.any
+        d3fn: React.PropTypes.func.isRequired
     },
 
     getInitialState() {
@@ -25,7 +23,7 @@ const D3Component = React.createClass({
 
     componentWillMount() {
         this.setState({
-            chart: this.props.fn()
+            chart: this.props.d3fn()
         });
     },
 
@@ -39,7 +37,6 @@ const D3Component = React.createClass({
 
     _getContainer() {
         let options = {
-            className: 'minichart',
             ref: 'container'
         };
         const sizeOptions = {
@@ -49,16 +46,7 @@ const D3Component = React.createClass({
         if (this.props.renderMode === 'svg') {
             options = _.assign(options, sizeOptions);
             return (
-                <svg {...options}>
-                    <defs>
-                        <pattern id="diagonal-stripes" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-                            <rect width="2.5" height="4" transform="translate(0,0)" fill="white"></rect>
-                        </pattern>
-                        <mask id="mask-stripe">
-                            <rect x="0" y="0" width="100%" height="100%" fill="url(#diagonal-stripes)"></rect>
-                        </mask>
-                    </defs>
-                </svg>
+                <svg {...options}></svg>
             );
         }
         options = _.assign(options, {
@@ -73,12 +61,6 @@ const D3Component = React.createClass({
             .width(this.props.width)
             .height(this.props.height);
 
-        this.state.chart.options({
-            fieldName: this.props.fieldName,
-            unique: this.props.type.unique,
-            query: this.props.query
-        });
-
         d3.select(el)
             .datum(this.props.data)
             .call(this.state.chart);
@@ -87,7 +69,7 @@ const D3Component = React.createClass({
     render() {
         const container = this._getContainer();
         return (
-            <div className="minichart-wrapper" ref="wrapper">
+            <div ref="wrapper">
                 {container}
             </div>
         );
