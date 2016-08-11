@@ -8,7 +8,7 @@ const _ = require('lodash');
 const D3Component = React.createClass({
 
     propTypes: {
-        data: React.PropTypes.array.isRequired,
+        data: React.PropTypes.any.isRequired,
         renderMode: React.PropTypes.oneOf(['svg', 'div']),
         width: React.PropTypes.number,
         height: React.PropTypes.number,

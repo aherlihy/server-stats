@@ -8,7 +8,7 @@ const vizFns = require('../d3');
 const Minichart = React.createClass({
 
   propTypes: {
-    data: React.PropTypes.array.isRequired,
+    data: React.PropTypes.any.isRequired,
     graph_type:React.PropTypes.string.isRequired
   },
   getInitialState() {
@@ -48,13 +48,12 @@ const Minichart = React.createClass({
   minichartFactory() {
     /* eslint camelcase: 0 */
     fn = vizFns[this.props.graph_type];
-    console.log(this.props.data);
     return (
       <D3Component
         data={this.props.data}
         renderMode="svg"
-        width={100}
-        height={100}
+        width={450}
+        height={350}
         d3fn={fn}
       />
     );

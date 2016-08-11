@@ -83,16 +83,16 @@ class ServerStatsComponent extends React.Component {
    */
   renderGraph() {
     // return 'SERVER-STATS=' + JSON.stringify(this.state.data, null, 2);
-    var testdata = [4, 8, 15, 16, 23, 42];
-    return (
+    if (this.state.data != null && 'opcounters' in this.state.data) {
+      return (
         <div className="myminichart">
           <Minichart
-              // data={this.state.data}
-              data={testdata}
-              graph_type="testchart"
+            data={this.state.data['opcounters']}
+            graph_type="testchart"
           />
         </div>
-    );
+      );
+    }
   }
 
 
