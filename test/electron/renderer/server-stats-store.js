@@ -12,15 +12,18 @@ const ServerStatsStore = Reflux.createStore({
     this.dataService.connect(() => {
       this.listenTo(Actions.pollServerStats, this.serverStats);
     });
-    this.opcounters = [];
-    this.data = {'opcounters': this.opcounters} //TODO: add more
+    this.opCounters = [];
+    this.localTime = [];
+    this.data = {'opCounters': this.opCounters, 'localTime': this.localTime}; // TODO: add more
   },
 
   serverStats: function() {
     this.dataService.serverstats((error, doc) => {
-      if (doc != null && 'opcounters' in doc) {
-        this.opcounters.push(doc.opcounters);
-        this.data.opcounters = this.opcounters.slice(Math.max(this.opcounters.length - 100, 0));
+      if (doc) {
+        this.opCounters.push(doc['opcounters']);
+        this.data.opCounters = this.opCounters.slice(Math.max(this.opCounters.length - 100, 0));
+        this.localTime.push(doc['localTime']);
+        this.data.localTime = this.localTime.slice(Math.max(this.localTime.length - 100, 0));
       }
       this.trigger(error, this.data);
     });

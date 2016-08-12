@@ -56,7 +56,6 @@ const D3Component = React.createClass({
     },
 
     _redraw() {
-        console.log(this.props.data);
         const el = ReactDOM.findDOMNode(this.refs.container);
         this.state.chart
             .width(this.props.width)

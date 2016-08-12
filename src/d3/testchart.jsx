@@ -8,21 +8,26 @@ const testfunction = function() {
   var height             = 300;
   function chart(selection) {
     selection.each(function(data) {
+      console.log("START OF CHART");
+      console.log(data);
 
-      var values = d3.values(data);
-      var keys = d3.keys(data);
+      var opCounters = data.opCounters;
+      var localTime = data.localTime;
+
+      var minOp = 0;
+      var maxOp = 0;
+      for (var i=0;i<opCounters.length;i++) {
+        var sub = d3.values(opCounters[i]);
+        sub.push(minOp);
+        sub.push(maxOp);
+        minOp = d3.min(sub);
+        maxOp = d3.max(sub);
+      } // TODO: persist state
+
       var margin = {top: 20, right: 20, bottom: 60, left: 60};
       var subheight = height - margin.top - margin.bottom;
       var subwidth = width - margin.left - margin.right;
-
-      var x = d3.scale.linear()
-        .domain([0, keys.length])// + 1])
-        .range([0, subwidth]);
-
-      var y = d3.scale.linear()
-        .domain([0, d3.max(values)])
-        .range([subheight, 0]);
-
+  
       var component = d3.select(this);
       component
         .append('rect')
@@ -30,61 +35,42 @@ const testfunction = function() {
         .attr('height', '100%')
         .attr('fill', 'pink');
 
-      component
-        .append('svg:svg')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('class', 'chart')
-        .attr('fill', 'yellow');
+      var g = component.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      // var parseTime = d3.timeParse("%Y%m%d");
 
-      var main = component
-        .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-        .attr('width', subwidth)
-        .attr('height', subheight)
-        .attr('class', 'main');
+      var x = d3.time.scale().range([0, subwidth]),
+        y = d3.scale.linear().range([subheight, 0]),
+        // z = d3.scale.ordinal(d3.scale.category10());
+        z = d3.scale.category10();
 
-      // draw the x axis
-      var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient('bottom')
-        .tickFormat(function(d) {
-          // if(d==0) {
-          //   return "";
-          // } else {
-            return keys[d];
-          // }
-        })
-        ;
+      x.domain(d3.extent(localTime));
+      y.domain([minOp, maxOp]); // TODO: don't scale to 0, scale to smallest op #
+      z.domain([0, 5]); // TODO: ???
 
-      main.append('g')
-        .attr('transform', 'translate(0,' + subheight + ')')
-        .attr('class', 'main axis date')
-        .call(xAxis);
+      g.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + subheight + ")")
+        .call(d3.svg.axis().scale(x).orient('bottom'));
 
-      // draw the y axis
-      var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient('left');
+      g.append("g")
+        .attr("class", "axis axis--y")
+        .call(d3.svg.axis().scale(y).orient('left'));
 
-      main.append('g')
-        .attr('transform', 'translate(0,0)')
-        .attr('class', 'main axis date')
-        .call(yAxis);
+      var keys = d3.keys(opCounters[0]);
+      for(var i=0;i<keys.length;i++) {
+        var myLine = d3.svg.line()
+          .x(function(d, i) { return x(localTime[i]); })
+          .y(function(d) { return y(d[keys[i]]); }); // TODO; fix command
 
-      var g = main.append("svg:g");
+        g.append("svg:path")
+          .attr("class", "line")
+          .attr("d", myLine(opCounters))
+          .attr("stroke", z(i))
+          .attr('fill','none')
+          .attr('stroke-width', 4);
+      }
 
-      g.selectAll("scatter-dots")
-        .data(keys)
-        .enter().append("svg:circle")
-        .attr("cx", function (d, i) {
-          return x(i);
-        })
-        .attr("cy", function (d) {
-          console.log("in cy d=" + d + " values=" + values);
-          return y(data[d]);
-        })
-        .attr("r", 8);
+
     });
   }
   // Configuration Getters & Setters
