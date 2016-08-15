@@ -12,18 +12,31 @@ const ServerStatsStore = Reflux.createStore({
     this.dataService.connect(() => {
       this.listenTo(Actions.pollServerStats, this.serverStats);
     });
-    this.opCounters = [];
+    this.opCounters = {'insert': [], 'update': [], 'getmore': [], 'delete': [], 'command': [], 'query': []};
     this.localTime = [];
-    this.data = {'opCounters': this.opCounters, 'localTime': this.localTime}; // TODO: add more
+    this.currentMax = 0;
+    this.data = {'opCounters': {}, 'localTime': [], 'currentMax': this.currentMax}; // TODO: add more
+    this.maxOps = 100;
   },
 
   serverStats: function() {
     this.dataService.serverstats((error, doc) => {
       if (doc) {
-        this.opCounters.push(doc['opcounters']);
-        this.data.opCounters = this.opCounters.slice(Math.max(this.opCounters.length - 100, 0));
-        this.localTime.push(doc['localTime']);
-        this.data.localTime = this.localTime.slice(Math.max(this.localTime.length - 100, 0));
+        this.localTime.push(doc.localTime);
+        this.data.localTime = this.localTime.slice(Math.max(this.localTime.length - this.maxOps, 0));
+
+        var allOps, val;
+        for(var key in doc['opcounters']) {
+          allOps = this.opCounters[key];
+          val = doc['opcounters'][key];
+          allOps.push(val);
+          this.data.opCounters[key] = allOps.slice(Math.max(allOps.length - this.maxOps, 0));
+          if (val > this.currentMax) {
+            this.currentMax = val;
+          }
+        }
+
+        this.data.currentMax = this.currentMax;
       }
       this.trigger(error, this.data);
     });
