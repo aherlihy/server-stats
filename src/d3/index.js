@@ -5,6 +5,5 @@ module.exports = {
   // string: require('./string'),
   // objectid: require('./date'),
   // coordinates: require('./coordinates')
-  testchart: require('./testchart'),
-  timeseries: require('./timeSeriesChart')
+  testchart: require('./testchart')
 };
