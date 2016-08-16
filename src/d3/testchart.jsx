@@ -7,12 +7,11 @@ const testfunction = function() {
   var height = 300;
   var x = d3.time.scale();
   var y = d3.scale.linear();
-  var z = d3.scale.category10();
   var yAxis = d3.svg.axis().scale(y).orient('left');
   var xAxis = d3.svg.axis()
     .scale(x).orient('bottom')
-    .ticks(d3.time.seconds, 10)
     .tickFormat(d3.time.format('%a %d %I:%M:%S'));
+
   function chart(selection) {
     selection.each(function(data) {
       debug(data);
@@ -25,7 +24,8 @@ const testfunction = function() {
       y
         .domain([0, data.currentMax])
         .range([subheight, 0]); // TODO: don't scale to 0, scale to smallest op #
-      z.domain([0, 5]); // TODO: ???
+      xAxis.tickValues(x.domain());
+
       var container = d3.select(this);
       var g = container.selectAll('g.chart').data([0]);
       var gEnter = g.enter()
