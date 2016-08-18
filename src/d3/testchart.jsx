@@ -73,15 +73,14 @@ const testfunction = function() {
           .append("circle")
           .attr('class', "circle-" + key.op)
           .attr("r", 4.5);
-
-        focus.append("text")
-          .attr("class", "text-" + key.op)
-          .attr("x", 9)
-          .attr("dy", ".35em");
       }
+      focus.append("line")
+        .attr("class", "line-mouse")
+        .style("stroke", "black")
+        .attr("x1", x(0)).attr("y1", y(0))
+        .attr("x2", x(0)).attr("y2", y(data.currentMax));
 
-      var overlay = container.selectAll('rect').data([0]).enter()
-      // focus
+      var overlay = container.selectAll('rect.overlay').data([0]).enter()
         .append("rect")
         .attr("class", "overlay")
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
@@ -96,19 +95,18 @@ const testfunction = function() {
         console.log("IN MOUSEMOVE");
         var x0 = x.invert(d3.mouse(this)[0]), // get actual x value from mouse location
           i = bisectDate(data.localTime, x0, 1), // get index of actual x value in data
-          d0 = data.localTime[i - 1],
-          d1 = data.localTime[i],
-          d = x0 - d0 > d1 - x0 ? i-1 : i;
+          // d0 = data.localTime[i - 1],
+          // d1 = data.localTime[i],
+          // d = x0 - d0 > d1 - x0 ? i-1 : i;
+          d = i;
 
         var leftOffset = x(data.localTime[d]);
+        focus.selectAll('line.line-mouse').attr("transform", "translate(" + leftOffset + ",0)");
         for (var k=0; k < data.opCounters.length; k++) {
           var key = data.opCounters[k];
           var rightOffset = y(key.count[d]);
           focus.selectAll('circle.circle-' + key.op)
                 .attr("transform", "translate(" + leftOffset + "," + rightOffset + ")");
-          focus.selectAll('text.text-' + key.op)
-                .attr("transform", "translate(" + leftOffset + "," + rightOffset + ")")
-                .text("key.op: " + key.count[d]);
         }
       }
     });
