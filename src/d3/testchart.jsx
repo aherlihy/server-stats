@@ -79,6 +79,9 @@ const testfunction = function() {
         .style("stroke", "black")
         .attr("x1", x(0)).attr("y1", y(0))
         .attr("x2", x(0)).attr("y2", y(data.currentMax));
+      focus.append("path")
+        .attr("class", "top-triangle")
+        .attr("d", d3.svg.symbol().type("triangle-down"));
 
       var overlay = container.selectAll('rect.overlay').data([0]).enter()
         .append("rect")
@@ -100,8 +103,14 @@ const testfunction = function() {
           // d = x0 - d0 > d1 - x0 ? i-1 : i;
           d = i;
 
+        if (d >= data.localTime.length) {
+          console.log("IGNORING");
+          return;
+        }
+
         var leftOffset = x(data.localTime[d]);
         focus.selectAll('line.line-mouse').attr("transform", "translate(" + leftOffset + ",0)");
+        focus.selectAll('path.top-triangle').attr("transform", "translate(" + leftOffset + ",0)");
         for (var k=0; k < data.opCounters.length; k++) {
           var key = data.opCounters[k];
           var rightOffset = y(key.count[d]);
