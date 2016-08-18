@@ -1,9 +1,11 @@
 const d3 = require('d3');
 const debug = require('debug')('server-stats:testchart');
+const  _ = require('lodash');
+
 const testfunction = function() {
   'use strict';
   debug('Setting up testfunction');
-  var width = 400;
+  var width = 450;
   var height = 300;
   var x = d3.time.scale();
   var y = d3.scale.linear();
@@ -25,6 +27,7 @@ const testfunction = function() {
         .domain([0, data.currentMax])
         .range([subheight, 0]); // TODO: don't scale to 0, scale to smallest op #
       xAxis.tickValues(x.domain());
+      yAxis.tickValues(y.domain());
 
       var container = d3.select(this);
       var g = container.selectAll('g.chart').data([0]);
@@ -55,6 +58,56 @@ const testfunction = function() {
         .attr('fill', 'none');
       container.selectAll('path.line')
         .attr('d', function(d) { return line(d.count); });
+
+      // Overlays
+      var bisectDate = d3.bisector(function(d) { return d; }).left;
+      var focus = container.selectAll('g.focus').data([0]).enter()
+        .append("g")
+        .attr("class", "focus")
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+        .style("display", "none");
+
+      for (var k=0; k < data.opCounters.length; k++) {
+        var key = data.opCounters[k];
+        focus.append("circle-" + key.op)
+          .attr("r", 4.5);
+
+        // focus.append("text-" + key.op)
+        //   .attr("x", 9)
+        //   .attr("dy", ".35em");
+      }
+
+      var overlay = container.selectAll('rect').data([0]).enter()
+      // focus
+        .append("rect")
+        .attr("class", "overlay")
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+        .attr("width", subwidth)
+        .attr("height", subheight)
+        .attr("opacity", 0)
+        .on("mouseover", function() { focus.style("display", null); })
+        .on("mouseout", function() { focus.style("display", "none"); })
+        .on("mousemove", mousemove);
+
+      function mousemove() {
+        console.log("IN MOUSEMOVE");
+        var x0 = x.invert(d3.mouse(this)[0]), // get actual x value from mouse location
+          i = bisectDate(data.localTime, x0, 1), // get index of actual x value in data
+          d0 = data.localTime[i - 1],
+          d1 = data.localTime[i],
+          d = x0 - d0 > d1 - x0 ? i-1 : i;
+
+        var leftOffset = margin.left + x(data.localTime[d]);
+        for (var k=0; k < data.opCounters.length; k++) {
+          var key = data.opCounters[k];
+          var rightOffset = margin.right + y(key.count[d]);
+          focus.selectAll('circle-' + key.op)
+                .attr("transform", "translate(" + leftOffset + "," + rightOffset + ")");
+          // focus.selectAll('text-' + key.op)
+          //       .attr("transform", "translate(" + leftOffset + "," + rightOffset + ")")
+          //       .text("HERE");
+        }
+      }
     });
   }
   // Configuration Getters & Setters
