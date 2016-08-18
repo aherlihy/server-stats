@@ -69,12 +69,15 @@ const testfunction = function() {
 
       for (var k=0; k < data.opCounters.length; k++) {
         var key = data.opCounters[k];
-        focus.append("circle-" + key.op)
+        focus
+          .append("circle")
+          .attr('class', "circle-" + key.op)
           .attr("r", 4.5);
 
-        // focus.append("text-" + key.op)
-        //   .attr("x", 9)
-        //   .attr("dy", ".35em");
+        focus.append("text")
+          .attr("class", "text-" + key.op)
+          .attr("x", 9)
+          .attr("dy", ".35em");
       }
 
       var overlay = container.selectAll('rect').data([0]).enter()
@@ -97,15 +100,15 @@ const testfunction = function() {
           d1 = data.localTime[i],
           d = x0 - d0 > d1 - x0 ? i-1 : i;
 
-        var leftOffset = margin.left + x(data.localTime[d]);
+        var leftOffset = x(data.localTime[d]);
         for (var k=0; k < data.opCounters.length; k++) {
           var key = data.opCounters[k];
-          var rightOffset = margin.right + y(key.count[d]);
-          focus.selectAll('circle-' + key.op)
+          var rightOffset = y(key.count[d]);
+          focus.selectAll('circle.circle-' + key.op)
                 .attr("transform", "translate(" + leftOffset + "," + rightOffset + ")");
-          // focus.selectAll('text-' + key.op)
-          //       .attr("transform", "translate(" + leftOffset + "," + rightOffset + ")")
-          //       .text("HERE");
+          focus.selectAll('text.text-' + key.op)
+                .attr("transform", "translate(" + leftOffset + "," + rightOffset + ")")
+                .text("key.op: " + key.count[d]);
         }
       }
     });
