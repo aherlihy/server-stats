@@ -16,7 +16,7 @@ const testfunction = function() {
 
   function chart(selection) {
     selection.each(function(data) {
-      debug(data);
+      // console.log(data);
       var margin = {top: 20, right: 20, bottom: 60, left: 60};
       var subheight = height - margin.top - margin.bottom;
       var subwidth = width - margin.left - margin.right;
@@ -24,8 +24,8 @@ const testfunction = function() {
         .domain(d3.extent(data.localTime))
         .range([0, subwidth]);
       y
-        .domain([0, data.currentMax])
-        .range([subheight, 0]); // TODO: don't scale to 0, scale to smallest op #
+        .domain(data.yDomain) // keep graph to at least +-10
+        .range([subheight, 0]);
       xAxis.tickValues(x.domain());
       yAxis.tickValues(y.domain());
 
@@ -38,7 +38,7 @@ const testfunction = function() {
       gEnter
         .append('g')
         .attr('class', 'axis-x')
-        .attr('transform', 'translate(0,' + subheight + ')')
+        .attr('transform', 'translate(0,' + subheight/2 + ')')
         .call(d3.svg.axis().scale(x).orient('bottom'));
       d3.selectAll('.axis-x').call(xAxis);
       gEnter
@@ -49,7 +49,7 @@ const testfunction = function() {
       var line = d3.svg.line()
         .x(function(d, i) { return x(data.localTime[i]); })
         .y(function(d) { return y(d); });
-      var ops = g.selectAll('.operation').data(data.opCounters);
+      var ops = g.selectAll('.operation').data(data.operations);
       ops.enter().append('g')
         .attr('class', 'operation')
         .append('path')
@@ -72,8 +72,8 @@ const testfunction = function() {
         .attr("dy", ".35em")
         .attr("x", 9);
 
-      for (var k=0; k < data.opCounters.length; k++) {
-        var key = data.opCounters[k];
+      for (var k=0; k < data.operations.length; k++) {
+        var key = data.operations[k];
         focus
           .append("circle")
           .attr('class', "circle-" + key.op)
@@ -82,8 +82,8 @@ const testfunction = function() {
       focus.append("line")
         .attr("class", "line-mouse")
         .style("stroke", "black")
-        .attr("x1", x(0)).attr("y1", y(0))
-        .attr("x2", x(0)).attr("y2", y(data.currentMax));
+        .attr("x1", x(0)).attr("y1", y(y.domain()[0]))
+        .attr("x2", x(0)).attr("y2", y(y.domain()[1]));
       focus.append("path")
         .attr("class", "triangle-mouse")
         .attr("d", d3.svg.symbol().type("triangle-down"));
@@ -116,12 +116,12 @@ const testfunction = function() {
           .attr("transform", "translate(" + leftOffset + ",0)");
         focus.selectAll('path.triangle-mouse')
           .attr("transform", "translate(" + leftOffset + ",0)");
-        focus.selectAll('text.text-mouse')
-          .attr("text", "HERE")//data.localTime[d])
-          .style("font-size","100px")
-          .attr("transform", "translate(" + leftOffset + "," + y(data.currentMax-5) + ")");
-        for (var k=0; k < data.opCounters.length; k++) {
-          var key = data.opCounters[k];
+        // focus.selectAll('text.text-mouse')
+        //   .attr("text", "HERE")//data.localTime[d])
+        //   .style("font-size","100px")
+        //   .attr("transform", "translate(" + leftOffset + "," + y(data.currentMax-5) + ")");
+        for (var k=0; k < data.operations.length; k++) {
+          var key = data.operations[k];
           var rightOffset = y(key.count[d]);
           focus.selectAll('circle.circle-' + key.op)
                 .attr("transform", "translate(" + leftOffset + "," + rightOffset + ")");
