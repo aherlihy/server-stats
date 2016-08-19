@@ -67,6 +67,11 @@ const testfunction = function() {
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
         .style("display", "none");
 
+      focus.append("text")
+        .attr("class", "text-mouse")
+        .attr("dy", ".35em")
+        .attr("x", 9);
+
       for (var k=0; k < data.opCounters.length; k++) {
         var key = data.opCounters[k];
         focus
@@ -80,7 +85,7 @@ const testfunction = function() {
         .attr("x1", x(0)).attr("y1", y(0))
         .attr("x2", x(0)).attr("y2", y(data.currentMax));
       focus.append("path")
-        .attr("class", "top-triangle")
+        .attr("class", "triangle-mouse")
         .attr("d", d3.svg.symbol().type("triangle-down"));
 
       var overlay = container.selectAll('rect.overlay').data([0]).enter()
@@ -95,7 +100,6 @@ const testfunction = function() {
         .on("mousemove", mousemove);
 
       function mousemove() {
-        console.log("IN MOUSEMOVE");
         var x0 = x.invert(d3.mouse(this)[0]), // get actual x value from mouse location
           i = bisectDate(data.localTime, x0, 1), // get index of actual x value in data
           // d0 = data.localTime[i - 1],
@@ -104,13 +108,18 @@ const testfunction = function() {
           d = i;
 
         if (d >= data.localTime.length) {
-          console.log("IGNORING");
           return;
         }
 
         var leftOffset = x(data.localTime[d]);
-        focus.selectAll('line.line-mouse').attr("transform", "translate(" + leftOffset + ",0)");
-        focus.selectAll('path.top-triangle').attr("transform", "translate(" + leftOffset + ",0)");
+        focus.selectAll('line.line-mouse')
+          .attr("transform", "translate(" + leftOffset + ",0)");
+        focus.selectAll('path.triangle-mouse')
+          .attr("transform", "translate(" + leftOffset + ",0)");
+        focus.selectAll('text.text-mouse')
+          .attr("text", "HERE")//data.localTime[d])
+          .style("font-size","100px")
+          .attr("transform", "translate(" + leftOffset + "," + y(data.currentMax-5) + ")");
         for (var k=0; k < data.opCounters.length; k++) {
           var key = data.opCounters[k];
           var rightOffset = y(key.count[d]);
