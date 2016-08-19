@@ -20,8 +20,10 @@ const testfunction = function() {
       var margin = {top: 20, right: 20, bottom: 60, left: 60};
       var subheight = height - margin.top - margin.bottom;
       var subwidth = width - margin.left - margin.right;
+      var minTime = data.localTime[data.localTime.length - 1];
+      minTime = new Date(minTime.getTime() - 100000);
       x
-        .domain(d3.extent(data.localTime))
+        .domain(d3.extent([minTime].concat(data.localTime)))
         .range([0, subwidth]);
       y
         .domain(data.yDomain) // keep graph to at least +-10
