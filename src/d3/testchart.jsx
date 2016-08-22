@@ -13,6 +13,7 @@ const testfunction = function() {
   var xAxis = d3.svg.axis()
     .scale(x).orient('bottom')
     .tickFormat(d3.time.format('%a %d %I:%M:%S'));
+  var color = d3.scale.category10();
 
   function chart(selection) {
     selection.each(function(data) {
@@ -31,6 +32,7 @@ const testfunction = function() {
       xAxis.tickValues(x.domain());
       yAxis.tickValues(y.domain());
 
+      // Axes
       var container = d3.select(this);
       var g = container.selectAll('g.chart').data([0]);
       var gEnter = g.enter()
@@ -48,6 +50,8 @@ const testfunction = function() {
         .attr('class', 'axis-y')
         .call(d3.svg.axis().scale(y).orient('left'));
       d3.selectAll('.axis-y').call(yAxis);
+
+      // Lines
       var line = d3.svg.line()
         .x(function(d, i) { return x(data.localTime[i]); })
         .y(function(d) { return y(d); });
@@ -56,10 +60,40 @@ const testfunction = function() {
         .attr('class', 'operation')
         .append('path')
         .attr('class', function(d) { return 'line line-' + d.op; })
-        .attr('stroke', 'steelblue')
+        .attr('stroke', function(d, i) { return color(i); })
         .attr('fill', 'none');
       container.selectAll('path.line')
         .attr('d', function(d) { return line(d.count); });
+
+      // Legend
+      var legendWidth = subwidth / data.operations.length;
+      var l = container.selectAll('g.legend').data([0]);
+      var lEnter = l.enter()
+        .append('g')
+        .attr('class', 'legend')
+        .attr('width', subwidth)
+        .attr('height', margin.bottom)
+        .attr('transform', 'translate(' + margin.left + ',' + (subheight + margin.top) + ')');
+      var opDiv;
+      for (var k=0; k < data.operations.length; k++) {
+        var currOp = data.operations[k];
+        opDiv = lEnter
+          .append('g')
+          .attr("class", "legend" + currOp.op)
+          .attr('transform', 'translate(' + k*legendWidth + ',5)')
+          .style("fill", color(k));
+        opDiv
+          .append("rect")
+          .attr("class", "box")
+          .attr('width', 10)
+          .attr('height', 10);
+        opDiv
+          .append("text")
+          .attr("class", "text-" + currOp.op)
+          .attr('transform', 'translate(' + 15 + ',8)')
+          .attr("font-size",11)
+          .text(currOp.op);
+      }
 
       // Overlays
       var bisectDate = d3.bisector(function(d) { return d; }).left;

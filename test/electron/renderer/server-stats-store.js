@@ -19,12 +19,12 @@ const ServerStatsStore = Reflux.createStore({
     this.currentMin = -10;
     this.starting = true;
     this.data = {'operations': [
-                    {'op': 'insert', 'count': []},
-                    {'op': 'update', 'count': []},
-                    {'op': 'getmore', 'count': []},
-                    {'op': 'delete', 'count': []},
-                    {'op': 'command', 'count': []},
-                    {'op': 'query', 'count': []}],
+                    {'op': 'insert', 'count': [], 'active': true},
+                    {'op': 'update', 'count': [], 'active': true},
+                    {'op': 'getmore', 'count': [], 'active': true},
+                    {'op': 'delete', 'count': [], 'active': true},
+                    {'op': 'command', 'count': [], 'active': true},
+                    {'op': 'query', 'count': [], 'active': true}],
                  'localTime': [],
                  'yDomain': [this.currentMin, this.currentMax]};
     this.maxOps = 100;
