@@ -20,7 +20,7 @@ const testfunction = function() {
 
   function chart(selection) {
     selection.each(function(data) {
-      var margin = {top: 20, right: 20, bottom: 60, left: 60};
+      var margin = {top: 30, right: 30, bottom: 50, left: 40};
       var subheight = height - margin.top - margin.bottom;
       var subwidth = width - margin.left - margin.right;
       var minTime = data.localTime[data.localTime.length - 1];
@@ -77,21 +77,35 @@ const testfunction = function() {
         .attr('class', 'background-lines');
       [
         { 'x1': x.range()[0]+subMargin.left, "y1": y.range()[0],
-          "x2": x.range()[0]+subMargin.left, "y2": y.range()[1]-subMargin.top},
+          "x2": x.range()[0]+subMargin.left, "y2": y.range()[1]-subMargin.top,
+        "class": "left"},
         { 'x1': x.range()[1], "y1": y.range()[0],
-          "x2": x.range()[1], "y2": y.range()[1]-subMargin.top},
+          "x2": x.range()[1], "y2": y.range()[1]-subMargin.top,
+        "class": "right"},
         { 'x1': x.range()[0]+subMargin.left, "y1": y.range()[0],
-          "x2": x.range()[1], "y2": y.range()[0]},
+          "x2": x.range()[1], "y2": y.range()[0],
+        "class": "bottom"},
         { 'x1': x.range()[0]+subMargin.top, "y1": y.range()[1],
-          "x2": x.range()[1]+subMargin.top, "y2": y.range()[1]}
+          "x2": x.range()[1]+subMargin.top, "y2": y.range()[1],
+        "class": "top"},
+        { "x1": x.range()[0]+subMargin.left, "y1": (y.range()[0] / 2),
+          "x2": x.range()[1], "y2": (y.range()[0] / 2),
+          "class": "middle"}
       ].map(function(c) {
         gEnter
           .append("line")
-          .attr("class", "line")
+          .attr("class", "line-" + c['class'])
           .style('stroke', 'black')
           .attr('x1', c['x1']).attr('y1', c['y1'])
           .attr('x2', c['x2']).attr('y2', c['y2']);
       });
+      gEnter
+        .append("text")
+        .attr("class", "text-Ymax")
+        .attr("font-size",11)
+        .style("text-anchor", "left")
+        .attr('transform', 'translate(' + -35 + ',' + 5 + ')')
+        .text(data.yDomain[1] + " OPS");
 
       // Legend
       var legendWidth = (subwidth - subMargin.top) / data.operations.length;
@@ -134,7 +148,7 @@ const testfunction = function() {
       opDiv
         .append("text")
         .attr("class", "text-name")
-        .attr('transform', 'translate(' + 15 + ',9)')
+        .attr('transform', 'translate(' + 13 + ',9)')
         .attr("font-size",11)
         .text(function(d) {
           if (d == 'query') {
@@ -167,16 +181,15 @@ const testfunction = function() {
       focus.append("line")
         .attr("class", "line-mouse")
         .style("stroke", "black")
-        .attr("x1", x(x.domain()[0])).attr("y1", y(y.domain()[0]))
-        .attr("x2", x(x.domain()[0])).attr("y2", y(y.domain()[1]));
+        .attr('x1', x.range()[0]).attr("y1", y.range()[0])
+        .attr("x2", x.range()[0]).attr("y2", y.range()[1]);
       focus.append("path")
         .attr("class", "triangle-mouse")
         .attr("d", d3.svg.symbol().type("triangle-down"));
       focus.append("text")
         .attr("class", "text-mouse")
         .attr("font-size",11)
-        .style("text-anchor", "middle")
-        .text("TEST");
+        .style("text-anchor", "middle");
 
 
       focus.selectAll('.focus').data(keys).enter()
@@ -214,9 +227,9 @@ const testfunction = function() {
         focus.selectAll('line.line-mouse')
           .attr("transform", "translate(" + leftOffset + ",0)");
         focus.selectAll('path.triangle-mouse')
-          .attr("transform", "translate(" + leftOffset + ",0)");
+          .attr("transform", "translate(" + leftOffset + ",-5)");
         focus.selectAll('text.text-mouse')
-          .attr("transform", "translate(" + leftOffset + ",-10)")
+          .attr("transform", "translate(" + leftOffset + ",-15)")
           .text(d3.time.format("%X")(data.localTime[index]));
         for (var k = 0; k < data.operations.length; k++) {
           var key = data.operations[k];
