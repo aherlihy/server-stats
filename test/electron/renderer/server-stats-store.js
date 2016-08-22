@@ -12,19 +12,18 @@ const ServerStatsStore = Reflux.createStore({
     this.dataService.connect(() => {
       this.listenTo(Actions.pollServerStats, this.serverStats);
     });
-    this.prevCount = {'insert': 0, 'update': 0, 'getmore': 0, 'delete': 0, 'command': 0, 'query': 0};
     this.opsPerSec = {'insert': [], 'update': [], 'getmore': [], 'delete': [], 'command': [], 'query': []};
     this.localTime = [];
     this.currentMax = 10;
     this.currentMin = -10;
     this.starting = true;
     this.data = {'operations': [
-                    {'op': 'insert', 'count': [], 'active': true},
-                    {'op': 'update', 'count': [], 'active': true},
-                    {'op': 'getmore', 'count': [], 'active': true},
-                    {'op': 'delete', 'count': [], 'active': true},
-                    {'op': 'command', 'count': [], 'active': true},
-                    {'op': 'query', 'count': [], 'active': true}],
+                    {'op': 'insert', 'count': [], 'active': true, 'current': 0},
+                    {'op': 'update', 'count': [], 'active': true, 'current': 0},
+                    {'op': 'getmore', 'count': [], 'active': true, 'current': 0},
+                    {'op': 'delete', 'count': [], 'active': true, 'current': 0},
+                    {'op': 'command', 'count': [], 'active': true, 'current': 0},
+                    {'op': 'query', 'count': [], 'active': true, 'current': 0}],
                  'localTime': [],
                  'yDomain': [this.currentMin, this.currentMax]};
     this.maxOps = 100;
@@ -40,10 +39,10 @@ const ServerStatsStore = Reflux.createStore({
           key = this.data.operations[q].op;
           count = doc.opcounters[key];
           if (this.starting) { // don't add data, starting point
-            this.prevCount[key] = count;
+            this.data.operations[q].current = count;
             continue;
           }
-          val = count - this.prevCount[key];
+          val = count - this.data.operations[q].current;
           this.opsPerSec[key].push(val);
           this.data.operations[q].count = this.opsPerSec[key].slice(Math.max(this.opsPerSec[key].length - this.maxOps, 0));
           if (val > this.currentMax) {
@@ -51,7 +50,7 @@ const ServerStatsStore = Reflux.createStore({
           } else if (val < this.currentMin) {
             this.currentMin = val;
           }
-          this.prevCount[key] = count;
+          this.data.operations[q].current = count;
         }
         if (this.starting) {
           this.starting = false;

@@ -77,9 +77,7 @@ const testfunction = function() {
         .attr('width', subwidth)
         .attr('height', margin.bottom)
         .attr('transform', 'translate(' + margin.left + ',' + (subheight + margin.top) + ')');
-      var subL = lEnter.selectAll('.legend').data(keys);
-      var subLEnter = subL.enter();
-      var opDiv = subLEnter
+      var opDiv = lEnter.selectAll('.legend').data(keys).enter()
         .append('g')
         .attr("class", function(d) { return "legend legend-" + d; })
         .attr('transform', function(d, i) { return 'translate(' + i*legendWidth + ',5)'; } )
@@ -110,10 +108,20 @@ const testfunction = function() {
         });
       opDiv
         .append("text")
-        .attr("class", "text")
+        .attr("class", "text-name")
         .attr('transform', 'translate(' + 15 + ',8)')
         .attr("font-size",11)
         .text(function(d) { return d; });
+      opDiv
+        .append("text")
+        .attr("class", function(d) { return "text-" + d; })
+        .attr('transform', 'translate(' + 15 + ',25)')
+        .attr("font-size",15)
+        .attr('fill', 'black')
+        .text(function(d, i) { return data.operations[i].current; });
+      for (var i=0;i<keys.length;i++) { // TODO: fix
+        container.selectAll('text.text-' + keys[i]).text(data.operations[i].current);
+      }
 
       // Overlays
       var bisectDate = d3.bisector(function(d) { return d; }).left;
