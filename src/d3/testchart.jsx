@@ -84,8 +84,8 @@ const testfunction = function() {
       focus.append("line")
         .attr("class", "line-mouse")
         .style("stroke", "black")
-        .attr("x1", x(0)).attr("y1", y(y.domain()[0]))
-        .attr("x2", x(0)).attr("y2", y(y.domain()[1]));
+        .attr("x1", x(x.domain()[0])).attr("y1", y(y.domain()[0]))
+        .attr("x2", x(x.domain()[0])).attr("y2", y(y.domain()[1]));
       focus.append("path")
         .attr("class", "triangle-mouse")
         .attr("d", d3.svg.symbol().type("triangle-down"));
