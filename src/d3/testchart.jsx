@@ -14,6 +14,7 @@ const testfunction = function() {
     .scale(x).orient('bottom')
     .tickFormat(d3.time.format('%a %d %I:%M:%S'));
   var color = d3.scale.category10();
+  var keys = ['insert', 'update', 'getmore', 'delete', 'command', 'query'];
 
   function chart(selection) {
     selection.each(function(data) {
@@ -60,6 +61,8 @@ const testfunction = function() {
         .attr('class', 'operation')
         .append('path')
         .attr('class', function(d) { return 'line line-' + d.op; })
+        .attr("id", function(d) { return 'tag'+d.op; } )
+        .style("opacity", 1)
         .attr('stroke', function(d, i) { return color(i); })
         .attr('fill', 'none');
       container.selectAll('path.line')
@@ -74,26 +77,36 @@ const testfunction = function() {
         .attr('width', subwidth)
         .attr('height', margin.bottom)
         .attr('transform', 'translate(' + margin.left + ',' + (subheight + margin.top) + ')');
-      var opDiv;
-      for (var k=0; k < data.operations.length; k++) {
-        var currOp = data.operations[k];
-        opDiv = lEnter
-          .append('g')
-          .attr("class", "legend" + currOp.op)
-          .attr('transform', 'translate(' + k*legendWidth + ',5)')
-          .style("fill", color(k));
-        opDiv
-          .append("rect")
-          .attr("class", "box")
-          .attr('width', 10)
-          .attr('height', 10);
-        opDiv
-          .append("text")
-          .attr("class", "text-" + currOp.op)
-          .attr('transform', 'translate(' + 15 + ',8)')
-          .attr("font-size",11)
-          .text(currOp.op);
-      }
+      var subL = lEnter.selectAll('.legend').data(keys);
+      var subLEnter = subL.enter();
+      var opDiv = subLEnter
+        .append('g')
+        .attr("class", function(d) { return "legend legend-" + d; })
+        .attr('transform', function(d, i) { return 'translate(' + i*legendWidth + ',5)'; } )
+        .style("fill", function(d, i) { return color(i); } );
+      opDiv
+        .append("rect")
+        .attr("class", "box")
+        .attr('width', 10)
+        .attr('height', 10)
+        .on("click", function(d, i) {
+          console.log("CLICKED " + d);
+          var currOp = data.operations[i];
+          console.log("currOp.active=" + currOp.active);
+          var active = currOp.active ? false : true,
+            newOpacity = active ? 1 : 0;
+          console.log("active=" + active + ", newOpacity=" + newOpacity);
+          d3.select("#tag"+d)
+            .transition().duration(100)
+            .style("opacity", newOpacity);
+          currOp.active = active;
+        });
+      opDiv
+        .append("text")
+        .attr("class", "text")
+        .attr('transform', 'translate(' + 15 + ',8)')
+        .attr("font-size",11)
+        .text(function(d) { return d; });
 
       // Overlays
       var bisectDate = d3.bisector(function(d) { return d; }).left;
