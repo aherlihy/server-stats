@@ -1,4 +1,10 @@
 body {
-    background-color: #9ca4ab;
+    background-color: #455459;
     font: 12px Arial;
+}
+.axis-x, .axis-y {
+    fill: none;
+}
+.background-lines line {
+    stroke: #9ca4ab;
 }

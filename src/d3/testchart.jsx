@@ -5,7 +5,7 @@ const  _ = require('lodash');
 const testfunction = function() {
   'use strict';
   debug('Setting up testfunction');
-  var width = 450;
+  var width = 600;
   var height = 300;
   var x = d3.time.scale();
   var y = d3.scale.linear();
@@ -24,12 +24,13 @@ const testfunction = function() {
       var subheight = height - margin.top - margin.bottom;
       var subwidth = width - margin.left - margin.right;
       var minTime = data.localTime[data.localTime.length - 1];
+      var subMargin = {left: 20, top: 10};
       minTime = new Date(minTime.getTime() - 100000);
       x
         .domain(d3.extent([minTime].concat(data.localTime)))
         .range([0, subwidth]);
       y
-        .domain(data.yDomain) // keep graph to at least +-10
+        .domain(data.yDomain)
         .range([subheight, 0]);
       xAxis.tickValues(x.domain());
       yAxis.tickValues(y.domain());
@@ -70,25 +71,47 @@ const testfunction = function() {
       container.selectAll('path.line')
         .attr('d', function(d) { return line(d.count); });
 
+      // Border Lines
+      gEnter
+        .append('g')
+        .attr('class', 'background-lines');
+      [
+        { 'x1': x.range()[0]+subMargin.left, "y1": y.range()[0],
+          "x2": x.range()[0]+subMargin.left, "y2": y.range()[1]-subMargin.top},
+        { 'x1': x.range()[1], "y1": y.range()[0],
+          "x2": x.range()[1], "y2": y.range()[1]-subMargin.top},
+        { 'x1': x.range()[0]+subMargin.left, "y1": y.range()[0],
+          "x2": x.range()[1], "y2": y.range()[0]},
+        { 'x1': x.range()[0]+subMargin.top, "y1": y.range()[1],
+          "x2": x.range()[1]+subMargin.top, "y2": y.range()[1]}
+      ].map(function(c) {
+        gEnter
+          .append("line")
+          .attr("class", "line")
+          .style('stroke', 'black')
+          .attr('x1', c['x1']).attr('y1', c['y1'])
+          .attr('x2', c['x2']).attr('y2', c['y2']);
+      });
+
       // Legend
-      var legendWidth = subwidth / data.operations.length;
+      var legendWidth = (subwidth - subMargin.top) / data.operations.length;
       var l = container.selectAll('g.legend').data([0]);
       var lEnter = l.enter()
         .append('g')
         .attr('class', 'legend')
         .attr('width', subwidth)
         .attr('height', margin.bottom)
-        .attr('transform', 'translate(' + margin.left + ',' + (subheight + margin.top + 10) + ')');
+        .attr('transform', 'translate(' + (margin.left + subMargin.left) + ',' + (subheight + margin.top + subMargin.top) + ')');
       var opDiv = lEnter.selectAll('.legend').data(keys).enter()
         .append('g')
         .attr("class", function(d) { return "legend legend-" + d; })
-        .attr('transform', function(d, i) { return 'translate(' + i*legendWidth + ',5)'; } )
-        .style("fill", function(d, i) { return color(i); } );
+        .attr('transform', function(d, i) { return 'translate(' + i*legendWidth + ',5)'; } );
       opDiv
         .append("rect")
         .attr("class", "box")
         .attr("id", function(d) { return "box" + d; })
         .style("stroke", function(d, i) { return color(i); })
+        .style("fill", function(d, i) { return color(i); } )
         .style("stroke-width", 1)
         .style("fill-opacity", 1)
         .attr('width', 10)
@@ -111,9 +134,14 @@ const testfunction = function() {
       opDiv
         .append("text")
         .attr("class", "text-name")
-        .attr('transform', 'translate(' + 15 + ',8)')
+        .attr('transform', 'translate(' + 15 + ',9)')
         .attr("font-size",11)
-        .text(function(d) { return d; });
+        .text(function(d) {
+          if (d == 'query') {
+            d = 'querie';
+          }
+          return (d+'s').toUpperCase();
+        });
       opDiv
         .append("text")
         .attr("class", function(d) { return "current text-" + d; })

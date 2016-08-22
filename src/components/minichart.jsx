@@ -52,8 +52,8 @@ const Minichart = React.createClass({
       <D3Component
         data={this.props.data}
         renderMode="svg"
-        width={450}
-        height={350}
+        width={600}
+        height={300}
         d3fn={fn}
       />
     );
