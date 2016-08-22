@@ -12,7 +12,7 @@ const testfunction = function() {
   var yAxis = d3.svg.axis().scale(y).orient('left');
   var xAxis = d3.svg.axis()
     .scale(x).orient('bottom')
-    .tickFormat(d3.time.format('%a %d %I:%M:%S'));
+    .tickFormat(d3.time.format('%X'));
   var color = d3.scale.category10();
   var keys = ['insert', 'update', 'getmore', 'delete', 'command', 'query'];
 
@@ -114,14 +114,12 @@ const testfunction = function() {
         .text(function(d) { return d; });
       opDiv
         .append("text")
-        .attr("class", function(d) { return "text-" + d; })
+        .attr("class", function(d) { return "current text-" + d; })
         .attr('transform', 'translate(' + 15 + ',25)')
         .attr("font-size",15)
-        .attr('fill', 'black')
-        .text(function(d, i) { return data.operations[i].current; });
-      for (var i=0;i<keys.length;i++) { // TODO: fix
-        container.selectAll('text.text-' + keys[i]).text(data.operations[i].current);
-      }
+        .attr('fill', 'black');
+      container.selectAll('text.current')
+        .text(function(d) { return data.rawData[data.rawData.length - 1][d]; });
 
       // Overlays
       var bisectDate = d3.bisector(function(d) { return d; }).left;
@@ -182,7 +180,7 @@ const testfunction = function() {
           .attr("transform", "translate(" + leftOffset + ",0)");
         focus.selectAll('text.text-mouse')
           .attr("transform", "translate(" + leftOffset + ",-10)")
-          .text(data.localTime[d]);
+          .text(d3.time.format("%X")(data.localTime[d]));
         for (var k=0; k < data.operations.length; k++) {
           var key = data.operations[k];
           var rightOffset = y(key.count[d]);

@@ -13,6 +13,7 @@ const ServerStatsStore = Reflux.createStore({
       this.listenTo(Actions.pollServerStats, this.serverStats);
     });
     this.opsPerSec = {'insert': [], 'update': [], 'getmore': [], 'delete': [], 'command': [], 'query': []};
+    this.rawData = [];
     this.localTime = [];
     this.currentMax = 10;
     this.currentMin = -10;
@@ -25,7 +26,8 @@ const ServerStatsStore = Reflux.createStore({
                     {'op': 'command', 'count': [], 'active': true, 'current': 0},
                     {'op': 'query', 'count': [], 'active': true, 'current': 0}],
                  'localTime': [],
-                 'yDomain': [this.currentMin, this.currentMax]};
+                 'yDomain': [this.currentMin, this.currentMax],
+                 'rawData': []};
     this.maxOps = 100;
   },
 
@@ -44,6 +46,7 @@ const ServerStatsStore = Reflux.createStore({
           }
           val = count - this.data.operations[q].current;
           this.opsPerSec[key].push(val);
+          this.rawData.push(doc.opcounters);
           this.data.operations[q].count = this.opsPerSec[key].slice(Math.max(this.opsPerSec[key].length - this.maxOps, 0));
           if (val > this.currentMax) {
             this.currentMax = val;
@@ -56,9 +59,11 @@ const ServerStatsStore = Reflux.createStore({
           this.starting = false;
           return;
         }
+
         this.data.yDomain = [this.currentMin, this.currentMax];
         this.localTime.push(doc.localTime);
         this.data.localTime = this.localTime.slice(Math.max(this.localTime.length - this.maxOps, 0));
+        this.data.rawData = this.rawData.slice(Math.max(this.rawData.length - this.maxOps, 0));
       }
       this.trigger(error, this.data);
     });
