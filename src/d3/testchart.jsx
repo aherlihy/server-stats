@@ -103,6 +103,9 @@ const testfunction = function() {
           d3.select("#box"+d)
             .transition().duration(100)
             .style("fill-opacity", newOpacity);
+          d3.select("#circle"+d)
+            .transition().duration(100)
+            .style("opacity", newOpacity);
           currOp.active = active;
         });
       opDiv
@@ -129,6 +132,7 @@ const testfunction = function() {
         var key = data.operations[k];
         focus
           .append("circle")
+          .attr("id", "circle" + key.op)
           .attr('class', "circle-" + key.op)
           .attr("r", 4.5);
       }
