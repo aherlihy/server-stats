@@ -130,6 +130,12 @@ const testfunction = function() {
       focus.append("path")
         .attr("class", "triangle-mouse")
         .attr("d", d3.svg.symbol().type("triangle-down"));
+      focus.append("text")
+        .attr("class", "text-mouse")
+        .attr("font-size",11)
+        .style("text-anchor", "middle")
+        .text("TEST");
+
 
       focus.selectAll('.focus').data(keys).enter()
         .append("circle")
@@ -165,6 +171,9 @@ const testfunction = function() {
           .attr("transform", "translate(" + leftOffset + ",0)");
         focus.selectAll('path.triangle-mouse')
           .attr("transform", "translate(" + leftOffset + ",0)");
+        focus.selectAll('text.text-mouse')
+          .attr("transform", "translate(" + leftOffset + ",-10)")
+          .text(data.localTime[d]);
         for (var k=0; k < data.operations.length; k++) {
           var key = data.operations[k];
           var rightOffset = y(key.count[d]);
