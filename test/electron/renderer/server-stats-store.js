@@ -46,7 +46,6 @@ const ServerStatsStore = Reflux.createStore({
           }
           val = count - this.data.operations[q].current;
           this.opsPerSec[key].push(val);
-          this.rawData.push(doc.opcounters);
           this.data.operations[q].count = this.opsPerSec[key].slice(Math.max(this.opsPerSec[key].length - this.maxOps, 0));
           if (val > this.currentMax) {
             this.currentMax = val;
@@ -59,7 +58,7 @@ const ServerStatsStore = Reflux.createStore({
           this.starting = false;
           return;
         }
-
+        this.rawData.push(doc.opcounters);
         this.data.yDomain = [this.currentMin, this.currentMax];
         this.localTime.push(doc.localTime);
         this.data.localTime = this.localTime.slice(Math.max(this.localTime.length - this.maxOps, 0));

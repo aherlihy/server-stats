@@ -15,10 +15,11 @@ const testfunction = function() {
     .tickFormat(d3.time.format('%X'));
   var color = d3.scale.category10();
   var keys = ['insert', 'update', 'getmore', 'delete', 'command', 'query'];
+  var onOverlay = false;
+  var mouseLocation = null;
 
   function chart(selection) {
     selection.each(function(data) {
-      // console.log(data);
       var margin = {top: 20, right: 20, bottom: 60, left: 60};
       var subheight = height - margin.top - margin.bottom;
       var subwidth = width - margin.left - margin.right;
@@ -116,13 +117,19 @@ const testfunction = function() {
         .append("text")
         .attr("class", function(d) { return "current text-" + d; })
         .attr('transform', 'translate(' + 15 + ',25)')
-        .attr("font-size",15)
+        .attr("font-size", 15)
         .attr('fill', 'black');
-      container.selectAll('text.current')
-        .text(function(d) { return data.rawData[data.rawData.length - 1][d]; });
+
+      if (onOverlay) {
+        updateOverlay();
+      } else {
+        container.selectAll('text.current')
+          .text(function (d) {
+            return data.rawData[data.rawData.length - 1][d];
+          });
+      }
 
       // Overlays
-      var bisectDate = d3.bisector(function(d) { return d; }).left;
       var focus = container.selectAll('g.focus').data([0]).enter()
         .append("g")
         .attr("class", "focus")
@@ -157,36 +164,44 @@ const testfunction = function() {
         .attr("width", subwidth)
         .attr("height", subheight)
         .attr("opacity", 0)
-        .on("mouseover", function() { focus.style("display", null); })
-        .on("mouseout", function() { focus.style("display", "none"); })
+        .on("mouseover", function() { 
+          onOverlay = true;
+          focus.style("display", null);
+        })
+        .on("mouseout", function() {
+          onOverlay = false;
+          focus.style("display", "none");
+        })
         .on("mousemove", mousemove);
 
-      function mousemove() {
-        var x0 = x.invert(d3.mouse(this)[0]), // get actual x value from mouse location
-          i = bisectDate(data.localTime, x0, 1), // get index of actual x value in data
-          // d0 = data.localTime[i - 1],
-          // d1 = data.localTime[i],
-          // d = x0 - d0 > d1 - x0 ? i-1 : i;
-          d = i;
-
-        if (d >= data.localTime.length) {
+      function updateOverlay() {
+        var bisectDate = d3.bisector(function(d) { return d; }).left;
+        var index = bisectDate(data.localTime, x.invert(mouseLocation), 1);
+        if (index >= data.localTime.length) {
           return;
         }
-
-        var leftOffset = x(data.localTime[d]);
+        var leftOffset = x(data.localTime[index]);
+        var focus = container.selectAll('g.focus');
         focus.selectAll('line.line-mouse')
           .attr("transform", "translate(" + leftOffset + ",0)");
         focus.selectAll('path.triangle-mouse')
           .attr("transform", "translate(" + leftOffset + ",0)");
         focus.selectAll('text.text-mouse')
           .attr("transform", "translate(" + leftOffset + ",-10)")
-          .text(d3.time.format("%X")(data.localTime[d]));
-        for (var k=0; k < data.operations.length; k++) {
+          .text(d3.time.format("%X")(data.localTime[index]));
+        for (var k = 0; k < data.operations.length; k++) {
           var key = data.operations[k];
-          var rightOffset = y(key.count[d]);
+          var rightOffset = y(key.count[index]);
           focus.selectAll('circle.circle-' + key.op)
-                .attr("transform", "translate(" + leftOffset + "," + rightOffset + ")");
+            .attr("transform", "translate(" + leftOffset + "," + rightOffset + ")");
+          var currentText = container.selectAll('text.current.text-' + key.op);
+          currentText.text(data.rawData[index][key.op]);
         }
+      }
+
+      function mousemove() {
+        mouseLocation = d3.mouse(this)[0];
+        updateOverlay();
       }
     });
   }
