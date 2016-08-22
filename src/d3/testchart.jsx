@@ -44,7 +44,7 @@ const testfunction = function() {
       gEnter
         .append('g')
         .attr('class', 'axis-x')
-        .attr('transform', 'translate(0,' + subheight/2 + ')')
+        .attr('transform', 'translate(0,' + subheight + ')')
         .call(d3.svg.axis().scale(x).orient('bottom'));
       d3.selectAll('.axis-x').call(xAxis);
       gEnter
@@ -77,7 +77,7 @@ const testfunction = function() {
         .attr('class', 'legend')
         .attr('width', subwidth)
         .attr('height', margin.bottom)
-        .attr('transform', 'translate(' + margin.left + ',' + (subheight + margin.top) + ')');
+        .attr('transform', 'translate(' + margin.left + ',' + (subheight + margin.top + 10) + ')');
       var opDiv = lEnter.selectAll('.legend').data(keys).enter()
         .append('g')
         .attr("class", function(d) { return "legend legend-" + d; })
