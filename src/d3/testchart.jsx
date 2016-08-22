@@ -122,20 +122,6 @@ const testfunction = function() {
         .attr("class", "focus")
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
         .style("display", "none");
-
-      focus.append("text")
-        .attr("class", "text-mouse")
-        .attr("dy", ".35em")
-        .attr("x", 9);
-
-      for (var k=0; k < data.operations.length; k++) {
-        var key = data.operations[k];
-        focus
-          .append("circle")
-          .attr("id", "circle" + key.op)
-          .attr('class', "circle-" + key.op)
-          .attr("r", 4.5);
-      }
       focus.append("line")
         .attr("class", "line-mouse")
         .style("stroke", "black")
@@ -144,6 +130,12 @@ const testfunction = function() {
       focus.append("path")
         .attr("class", "triangle-mouse")
         .attr("d", d3.svg.symbol().type("triangle-down"));
+
+      focus.selectAll('.focus').data(keys).enter()
+        .append("circle")
+        .attr("id", function(d) { return "circle" + d; })
+        .attr('class', function(d) { return "focus circle-" + d; })
+        .attr("r", 4.5);
 
       var overlay = container.selectAll('rect.overlay').data([0]).enter()
         .append("rect")
@@ -173,10 +165,6 @@ const testfunction = function() {
           .attr("transform", "translate(" + leftOffset + ",0)");
         focus.selectAll('path.triangle-mouse')
           .attr("transform", "translate(" + leftOffset + ",0)");
-        // focus.selectAll('text.text-mouse')
-        //   .attr("text", "HERE")//data.localTime[d])
-        //   .style("font-size","100px")
-        //   .attr("transform", "translate(" + leftOffset + "," + y(data.currentMax-5) + ")");
         for (var k=0; k < data.operations.length; k++) {
           var key = data.operations[k];
           var rightOffset = y(key.count[d]);
