@@ -55,6 +55,7 @@ const testfunction = function() {
 
       // Lines
       var line = d3.svg.line()
+        .interpolate("basis")
         .x(function(d, i) { return x(data.localTime[i]); })
         .y(function(d) { return y(d); });
       var ops = g.selectAll('.operation').data(data.operations);
