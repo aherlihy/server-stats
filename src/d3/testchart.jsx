@@ -141,6 +141,7 @@ const testfunction = function() {
         .append("circle")
         .attr("id", function(d) { return "circle" + d; })
         .attr('class', function(d) { return "focus circle-" + d; })
+        .attr('fill', function(d, i) { return color(i); })
         .attr("r", 4.5);
 
       var overlay = container.selectAll('rect.overlay').data([0]).enter()
