@@ -87,18 +87,22 @@ const testfunction = function() {
       opDiv
         .append("rect")
         .attr("class", "box")
+        .attr("id", function(d) { return "box" + d; })
+        .style("stroke", function(d, i) { return color(i); })
+        .style("stroke-width", 1)
+        .style("fill-opacity", 1)
         .attr('width', 10)
         .attr('height', 10)
         .on("click", function(d, i) {
-          console.log("CLICKED " + d);
           var currOp = data.operations[i];
-          console.log("currOp.active=" + currOp.active);
           var active = currOp.active ? false : true,
             newOpacity = active ? 1 : 0;
-          console.log("active=" + active + ", newOpacity=" + newOpacity);
           d3.select("#tag"+d)
             .transition().duration(100)
             .style("opacity", newOpacity);
+          d3.select("#box"+d)
+            .transition().duration(100)
+            .style("fill-opacity", newOpacity);
           currOp.active = active;
         });
       opDiv
