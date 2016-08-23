@@ -25,4 +25,21 @@ body {
     stroke-width: 1px;
     fill-opacity: 1;
 }
-
+.legend-opname {
+    font-size: 11px;
+}
+.legend-opcount {
+    font-size: 11px;
+}
+.focus {
+    stroke: white;
+    fill: white;
+    font-size: 11px;
+    text-anchor: middle;
+}
+.overlay-line {
+    stroke-width: 2px;
+}
+.focus circle {
+    stroke: none;
+}

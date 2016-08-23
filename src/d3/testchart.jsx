@@ -161,9 +161,8 @@ const testfunction = function() {
         });
       opDiv
         .append("text")
-        .attr("class", "text-name")
+        .attr("class", "legend-opname")
         .attr('transform', 'translate(' + 13 + ',9)')
-        .style("font-size",11)
         .text(function(d) {
           if (d == 'query') {
             d = 'querie';
@@ -172,15 +171,14 @@ const testfunction = function() {
         });
       opDiv
         .append("text")
-        .attr("class", function(d) { return "current text-" + d; })
+        .attr("class", function(d) { return "legend-opcount text-" + d;} )
         .attr('transform', 'translate(' + 15 + ',25)')
-        .style("font-size", 15)
         .style('fill', 'black');
 
       if (onOverlay) {
         updateOverlay();
       } else {
-        container.selectAll('text.current')
+        container.selectAll('text.legend-opcount')
           .text(function (d) {
             return data.rawData[data.rawData.length - 1][d];
           });
@@ -194,7 +192,6 @@ const testfunction = function() {
         .style("display", "none");
       focus.append("line")
         .attr("class", "overlay-line")
-        .style("stroke", "black")
         .attr("transform", "translate(" + subMargin.left + ",0)")
         .attr('x1', x.range()[0]).attr("y1", y.range()[0])
         .attr("x2", x.range()[0]).attr("y2", y.range()[1]);
@@ -204,9 +201,7 @@ const testfunction = function() {
         .attr("d", d3.svg.symbol().type("triangle-down"));
       focus.append("text")
         .attr("class", "overlay-date")
-        .attr("transform", "translate(" + subMargin.left + ",0)")
-        .style("font-size",11)
-        .style("text-anchor", "middle");
+        .attr("transform", "translate(" + subMargin.left + ",0)");
 
 
       focus.selectAll('.focus').data(keys).enter()
@@ -253,7 +248,7 @@ const testfunction = function() {
           var rightOffset = y(key.count[index]);
           focus.selectAll('circle.overlay-circle-' + key.op)
             .attr("transform", "translate(" + leftOffset + "," + rightOffset + ")");
-          var currentText = container.selectAll('text.current.text-' + key.op);
+          var currentText = container.selectAll('text.legend-opcount.text-' + key.op);
           currentText.text(data.rawData[index][key.op]);
         }
       }
