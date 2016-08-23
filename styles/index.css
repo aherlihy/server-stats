@@ -6,7 +6,7 @@ body {
     fill: none;
 }
 .background-lines {
-    stroke-width: .75px;
+    stroke-width: 1px;
     stroke: #9ca4ab;
 }
 .axis-labels {
@@ -24,14 +24,15 @@ body {
     stroke-width: 2px;
 }
 .legend-box {
-    stroke-width: 1.5px;
+    stroke-width: 2px;
     fill-opacity: 1;
 }
 .legend-opname {
     font-size: 11px;
 }
 .legend-opcount {
-    font-size: 11px;
+    font-size: 14px;
+    fill: white;
 }
 .focus {
     stroke: white;
@@ -40,7 +41,7 @@ body {
     text-anchor: middle;
 }
 .overlay-line {
-    stroke-width: 1.5px;
+    stroke-width: 2px;
 }
 .overlay-bubbles {
     stroke: none;

@@ -143,8 +143,11 @@ const testfunction = function() {
         .attr("id", function(d) { return "box" + d; })
         .style("stroke", function(d, i) { return color(i); })
         .style("fill", function(d, i) { return color(i); } )
-        .attr('width', 10)
-        .attr('height', 10)
+        .attr('width', bubbleWidth)
+        .attr('height', bubbleWidth)
+        .attr("rx", bubbleWidth / 5)
+        .attr("ry", bubbleWidth / 5)
+        
         .on("click", function(d, i) {
           var currOp = data.operations[i];
           var active = currOp.active ? false : true,
@@ -173,8 +176,7 @@ const testfunction = function() {
       opDiv
         .append("text")
         .attr("class", function(d) { return "legend-opcount text-" + d;} )
-        .attr('transform', 'translate(' + 15 + ',25)')
-        .style('fill', 'black');
+        .attr('transform', 'translate(' + 15 + ',25)');
 
       if (onOverlay) {
         updateOverlay();
