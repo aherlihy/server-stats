@@ -17,6 +17,7 @@ const testfunction = function() {
   var keys = ['insert', 'update', 'getmore', 'delete', 'command', 'query'];
   var onOverlay = false;
   var mouseLocation = null;
+  var bubbleWidth = 10;
 
   function chart(selection) {
     selection.each(function(data) {
@@ -154,7 +155,7 @@ const testfunction = function() {
           d3.select("#box"+d)
             .transition().duration(100)
             .style("fill-opacity", newOpacity);
-          d3.select("#circle"+d)
+          d3.select("#bubble"+d)
             .transition().duration(100)
             .style("opacity", newOpacity);
           currOp.active = active;
@@ -205,11 +206,14 @@ const testfunction = function() {
 
 
       focus.selectAll('.focus').data(keys).enter()
-        .append("circle")
-        .attr("id", function(d) { return "circle" + d; })
-        .attr('class', function(d) { return "overlay-circle-" + d; })
-        .style('fill', function(d, i) { return color(i); })
-        .attr("r", 4.5);
+        .append("rect")
+        .attr('class', function(d) { return "overlay-bubbles box-" + d; })
+        .attr("id", function(d) { return "bubble" + d; })
+        .attr('width', bubbleWidth)
+        .attr('height', bubbleWidth)
+        .attr("rx", bubbleWidth / 5)
+        .attr("ry", bubbleWidth / 5)
+        .style('fill', function(d, i) { return color(i); });
 
       var overlay = container.selectAll('rect.overlay').data([0]).enter()
         .append("rect")
@@ -246,8 +250,8 @@ const testfunction = function() {
         for (var k = 0; k < data.operations.length; k++) {
           var key = data.operations[k];
           var rightOffset = y(key.count[index]);
-          focus.selectAll('circle.overlay-circle-' + key.op)
-            .attr("transform", "translate(" + leftOffset + "," + rightOffset + ")");
+          focus.selectAll('rect.box-' + key.op)
+            .attr("transform", "translate(" + (leftOffset - (bubbleWidth / 2))+ "," + (rightOffset - (bubbleWidth / 2))+ ")");
           var currentText = container.selectAll('text.legend-opcount.text-' + key.op);
           currentText.text(data.rawData[index][key.op]);
         }
