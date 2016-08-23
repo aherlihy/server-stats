@@ -27,7 +27,7 @@ const ServerStatsStore = Reflux.createStore({
                  'localTime': [],
                  'yDomain': [0, this.currentMax],
                  'rawData': []};
-    this.maxOps = 100;
+    this.maxOps = 65;
   },
 
   serverStats: function() {

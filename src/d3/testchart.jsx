@@ -13,7 +13,6 @@ const testfunction = function() {
   var xAxis = d3.svg.axis()
     .scale(x).orient('bottom')
     .tickFormat(d3.time.format('%X'));
-  var color = d3.scale.category10();
   var keys = ['insert', 'query', 'update', 'delete', 'command', 'getmore'];
   var onOverlay = false;
   var mouseLocation = null;
@@ -26,7 +25,7 @@ const testfunction = function() {
       var subwidth = width - margin.left - margin.right;
       var minTime = data.localTime[data.localTime.length - 1];
       var subMargin = {left: 20, top: 10};
-      minTime = new Date(minTime.getTime() - 100000);
+      minTime = new Date(minTime.getTime() - 60000);
       var xDomain = d3.extent([minTime].concat(data.localTime));
       var currSelection;
 
