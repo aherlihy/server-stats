@@ -101,11 +101,19 @@ const testfunction = function() {
       });
       gEnter
         .append("text")
-        .attr("class", "text-Ymax")
+        .attr("class", "y-label text-ops")
         .attr("font-size",11)
-        .style("text-anchor", "left")
-        .attr('transform', 'translate(' + -35 + ',' + 5 + ')')
-        .text(data.yDomain[1] + " OPS");
+        .style("text-anchor", "end")
+        .attr('transform', 'translate(' + 5 + ',' + 15 + ')')
+        .text('OPS');
+      gEnter
+        .append("text")
+        .attr("class", "y-label text-count")
+        .attr("font-size",11)
+        .style("text-anchor", "end")
+        .attr('transform', 'translate(' + 5 + ',' + 5 + ')');
+      container.selectAll('text.text-count')
+        .text(d3.format("s")(data.yDomain[1]));
 
       // Legend
       var legendWidth = (subwidth - subMargin.top) / data.operations.length;
