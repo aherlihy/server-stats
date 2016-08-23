@@ -26,8 +26,10 @@ const testfunction = function() {
       var minTime = data.localTime[data.localTime.length - 1];
       var subMargin = {left: 20, top: 10};
       minTime = new Date(minTime.getTime() - 100000);
+      var xDomain = d3.extent([minTime].concat(data.localTime));
+
       x
-        .domain(d3.extent([minTime].concat(data.localTime)))
+        .domain(xDomain)
         .range([0, subwidth]);
       y
         .domain(data.yDomain)
@@ -54,7 +56,30 @@ const testfunction = function() {
         .call(d3.svg.axis().scale(y).orient('left'));
       d3.selectAll('.axis-y').call(yAxis);
 
-      // Lines
+      // Axis labels
+      [
+        {"name" : "y-label text-ops", "x": 5, "y": 15, "default": "OPS/S", "anchor": "end"},
+        {"name" : "y-label text-count", "x": 5, "y": 5, "default": "", "anchor": "end"},
+        {"name" : "x-label min", "x": (x.range()[0] + subMargin.left), "y": (-subMargin.top-5), "default": "", "anchor":"middle"},
+        {"name" : "x-label max", "x": x.range()[1], "y": (-subMargin.top-5), "default": "", "anchor":"middle"}
+      ].map(function(c) {
+        gEnter
+          .append("text")
+          .attr("class", c["name"])
+          .attr("font-size",11)
+          .style("text-anchor", c["anchor"])
+          .attr('transform', 'translate(' + c["x"] + ',' + c["y"]+ ')')
+          .text(c["default"]);
+      });
+      debug("x.range()[1]", xDomain[1], "x.range()[0]", xDomain[0]);
+      container.selectAll('text.text-count')
+        .text(d3.format("s")(data.yDomain[1]));
+      container.selectAll('text.max')
+        .text(d3.time.format("%X")(xDomain[1]));
+      container.selectAll('text.min')
+        .text(d3.time.format("%X")(xDomain[0]));
+
+      // Chart Lines
       var line = d3.svg.line()
         .interpolate("cardinal")
         .x(function(d, i) { return x(data.localTime[i]); })
@@ -86,7 +111,7 @@ const testfunction = function() {
           "x2": x.range()[1], "y2": y.range()[0],
         "class": "bottom"},
         { 'x1': x.range()[0]+subMargin.top, "y1": y.range()[1],
-          "x2": x.range()[1]+subMargin.top, "y2": y.range()[1],
+          "x2": x.range()[1], "y2": y.range()[1],
         "class": "top"},
         { "x1": x.range()[0]+subMargin.left, "y1": (y.range()[0] / 2),
           "x2": x.range()[1], "y2": (y.range()[0] / 2),
@@ -99,21 +124,6 @@ const testfunction = function() {
           .attr('x1', c['x1']).attr('y1', c['y1'])
           .attr('x2', c['x2']).attr('y2', c['y2']);
       });
-      gEnter
-        .append("text")
-        .attr("class", "y-label text-ops")
-        .attr("font-size",11)
-        .style("text-anchor", "end")
-        .attr('transform', 'translate(' + 5 + ',' + 15 + ')')
-        .text('OPS');
-      gEnter
-        .append("text")
-        .attr("class", "y-label text-count")
-        .attr("font-size",11)
-        .style("text-anchor", "end")
-        .attr('transform', 'translate(' + 5 + ',' + 5 + ')');
-      container.selectAll('text.text-count')
-        .text(d3.format("s")(data.yDomain[1]));
 
       // Legend
       var legendWidth = (subwidth - subMargin.top) / data.operations.length;
