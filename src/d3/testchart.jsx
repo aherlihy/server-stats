@@ -71,7 +71,6 @@ const testfunction = function() {
           .attr('transform', 'translate(' + c["x"] + ',' + c["y"]+ ')')
           .text(c["default"]);
       });
-      debug("x.range()[1]", xDomain[1], "x.range()[0]", xDomain[0]);
       container.selectAll('text.text-count')
         .text(d3.format("s")(data.yDomain[1]));
       container.selectAll('text.max')
@@ -81,7 +80,7 @@ const testfunction = function() {
 
       // Chart Lines
       var line = d3.svg.line()
-        .interpolate("cardinal")
+        .interpolate("monotone")
         .x(function(d, i) { return x(data.localTime[i]); })
         .y(function(d) { return y(d); });
       var ops = g.selectAll('.operation').data(data.operations);
@@ -199,13 +198,16 @@ const testfunction = function() {
       focus.append("line")
         .attr("class", "line-mouse")
         .style("stroke", "black")
+        .attr("transform", "translate(" + subMargin.left + ",0)")
         .attr('x1', x.range()[0]).attr("y1", y.range()[0])
         .attr("x2", x.range()[0]).attr("y2", y.range()[1]);
       focus.append("path")
         .attr("class", "triangle-mouse")
+        .attr("transform", "translate(" + subMargin.left + ",0)")
         .attr("d", d3.svg.symbol().type("triangle-down"));
       focus.append("text")
         .attr("class", "text-mouse")
+        .attr("transform", "translate(" + subMargin.left + ",0)")
         .attr("font-size",11)
         .style("text-anchor", "middle");
 
