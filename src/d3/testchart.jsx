@@ -78,23 +78,6 @@ const testfunction = function() {
       container.selectAll('text.min')
         .text(d3.time.format("%X")(xDomain[0]));
 
-      // Chart Lines
-      var line = d3.svg.line()
-        .interpolate("monotone")
-        .x(function(d, i) { return x(data.localTime[i]); })
-        .y(function(d) { return y(d); });
-      var ops = g.selectAll('.operation').data(data.operations);
-      ops.enter().append('g')
-        .attr('class', 'operation')
-        .append('path')
-        .attr('class', function(d) { return 'line line-' + d.op; })
-        .attr("id", function(d) { return 'tag'+d.op; } )
-        .style("opacity", 1)
-        .attr('stroke', function(d, i) { return color(i); })
-        .attr('fill', 'none');
-      container.selectAll('path.line')
-        .attr('d', function(d) { return line(d.count); });
-
       // Border Lines
       gEnter
         .append('g')
@@ -123,6 +106,23 @@ const testfunction = function() {
           .attr('x1', c['x1']).attr('y1', c['y1'])
           .attr('x2', c['x2']).attr('y2', c['y2']);
       });
+  
+      // Chart Lines
+      var line = d3.svg.line()
+        .interpolate("monotone")
+        .x(function(d, i) { return x(data.localTime[i]); })
+        .y(function(d) { return y(d); });
+      var ops = g.selectAll('.operation').data(data.operations);
+      ops.enter().append('g')
+        .attr('class', 'operation')
+        .append('path')
+        .attr('class', function(d) { return 'line line-' + d.op; })
+        .attr("id", function(d) { return 'tag'+d.op; } )
+        .style("opacity", 1)
+        .attr('stroke', function(d, i) { return color(i); })
+        .attr('fill', 'none');
+      container.selectAll('path.line')
+        .attr('d', function(d) { return line(d.count); });
 
       // Legend
       var legendWidth = (subwidth - subMargin.top) / data.operations.length;
