@@ -21,20 +21,21 @@ const testfunction = function() {
   function chart(selection) {
     selection.each(function(data) {
       var margin = {top: 30, right: 30, bottom: 50, left: 40};
-      var subheight = height - margin.top - margin.bottom;
-      var subwidth = width - margin.left - margin.right;
-      var lastTime = data.localTime[data.localTime.length - 1];
-      var minTime = new Date(lastTime.getTime() - (data.maxOps*1000));
+      var subHeight = height - margin.top - margin.bottom;
+      var subWidth = width - margin.left - margin.right;
+      var minTime = data.localTime[data.localTime.length - 1];
+      minTime = new Date(minTime.getTime() - (data.maxOps*1000));
       var xDomain = d3.extent([minTime].concat(data.localTime));
-      var subMargin = {left: (subwidth / 60) * (data.maxOps - 60), top: 10};
+      var subMargin = {left: (subWidth / 60) * (data.maxOps - 60), top: 10};
       var currSelection;
+      var legendWidth = (subWidth - subMargin.top) / data.operations.length;
 
       x
         .domain(xDomain)
-        .range([0, subwidth]);
+        .range([0, subWidth]);
       y
         .domain(data.yDomain)
-        .range([subheight, 0]);
+        .range([subHeight, 0]);
       var timeZero = x.invert(subMargin.left);
 
       // Axes
@@ -47,7 +48,7 @@ const testfunction = function() {
       gEnter
         .append('g')
         .attr('class', 'axis-x')
-        .attr('transform', 'translate(0,' + subheight + ')')
+        .attr('transform', 'translate(0,' + subHeight + ')')
         .call(d3.svg.axis().scale(x).orient('bottom'));
       d3.selectAll('.axis-x').call(xAxis);
       gEnter
@@ -61,10 +62,14 @@ const testfunction = function() {
         .append('g')
         .attr('class', 'axis-labels');
       [
-        {"name" : "y-label text-ops", "x": subMargin.left-15, "y": 15, "default": "OPS/S"},
-        {"name" : "y-label text-count", "x": subMargin.left-15, "y": 5, "default": ""},
-        {"name" : "x-label min", "x": (x.range()[0] + subMargin.left), "y": (-subMargin.top-5), "default": ""},
-        {"name" : "x-label max", "x": x.range()[1], "y": (-subMargin.top-5), "default": ""}
+        {"name" : "y-label text-ops",
+          "x": subMargin.left-15, "y": 15, "default": "OPS/S"},
+        {"name" : "y-label text-count",
+          "x": subMargin.left-15, "y": 5, "default": ""},
+        {"name" : "x-label min", "x": (x.range()[0] + subMargin.left),
+          "y": (-subMargin.top-5), "default": ""},
+        {"name" : "x-label max", "x": x.range()[1],
+          "y": (-subMargin.top-5), "default": ""}
       ].map(function(c) {
         currSelection
           .append("text")
@@ -112,8 +117,8 @@ const testfunction = function() {
         .interpolate("monotone")
         .x(function(d, i) { return x(data.localTime[i]); })
         .y(function(d) { return y(d); });
-      var ops = g.selectAll('.operation').data(data.operations);
-      ops.enter().append('g')
+      g.selectAll('.operation').data(data.operations)
+        .enter().append('g')
         .attr('class', 'operation')
         .append('path')
         .attr('class', function(d) { return 'line ' + d.op; })
@@ -123,18 +128,21 @@ const testfunction = function() {
         .attr('d', function(d) { return line(d.count); });
 
       // Legend
-      var legendWidth = (subwidth - subMargin.top) / data.operations.length;
       var l = container.selectAll('g.legend').data([0]);
+      var mLeft = margin.left + subMargin.left;
+      var mRight = subHeight + margin.top + subMargin.top;
       var lEnter = l.enter()
         .append('g')
         .attr('class', 'legend')
-        .attr('width', subwidth)
+        .attr('width', subWidth)
         .attr('height', margin.bottom)
-        .attr('transform', 'translate(' + (margin.left + subMargin.left) + ',' + (subheight + margin.top + subMargin.top) + ')');
+        .attr('transform', 'translate(' + mLeft + ',' + mRight + ')');
       var opDiv = lEnter.selectAll('.legend').data(keys).enter()
         .append('g')
         .attr("class", "subLegend")
-        .attr('transform', function(d, i) { return 'translate(' + i*legendWidth + ',5)'; } );
+        .attr('transform', function(d, i) {
+          return 'translate(' + i*legendWidth + ',5)';
+        });
       opDiv
         .append("rect")
         .attr("class", function(d) { return "legend-box " + d; })
@@ -191,16 +199,16 @@ const testfunction = function() {
         .style("display", "none");
       focus.append("line")
         .attr("class", "overlay-line")
-        .attr("transform", "translate(" + subwidth + ",0)")
+        .attr("transform", "translate(" + subWidth + ",0)")
         .attr('x1', x.range()[0]).attr("y1", y.range()[0])
         .attr("x2", x.range()[0]).attr("y2", y.range()[1]);
       focus.append("path")
         .attr("class", "overlay-triangle")
-        .attr("transform", "translate(" + subwidth + ",0)")
+        .attr("transform", "translate(" + subWidth + ",0)")
         .attr("d", d3.svg.symbol().type("triangle-down"));
       focus.append("text")
         .attr("class", "overlay-date")
-        .attr("transform", "translate(" + subwidth + ",0)");
+        .attr("transform", "translate(" + subWidth + ",0)");
 
 
       focus.selectAll('.focus').data(keys).enter()
@@ -212,12 +220,12 @@ const testfunction = function() {
         .attr("rx", bubbleWidth / 5)
         .attr("ry", bubbleWidth / 5);
 
-      var overlay = container.selectAll('rect.overlay').data([0]).enter()
+      container.selectAll('rect.overlay').data([0]).enter()
         .append("rect")
         .attr("class", "overlay")
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-        .attr("width", subwidth)
-        .attr("height", subheight)
+        .attr("width", subWidth)
+        .attr("height", subHeight)
         .style("opacity", 0)
         .on("mouseover", function() { 
           onOverlay = true;
@@ -244,11 +252,14 @@ const testfunction = function() {
         focus.selectAll('text.overlay-date')
           .attr("transform", "translate(" + leftOffset + ",-15)")
           .text(d3.time.format("%X")(data.localTime[index]));
+        var key, rightOffset, lM, rM;
         for (var k = 0; k < data.operations.length; k++) {
-          var key = data.operations[k];
-          var rightOffset = y(key.count[index]);
+          key = data.operations[k];
+          rightOffset = y(key.count[index]);
+          lM = leftOffset - (bubbleWidth / 2);
+          rM = rightOffset - (bubbleWidth / 2);
           focus.selectAll('rect.' + key.op)
-            .attr("transform", "translate(" + (leftOffset - (bubbleWidth / 2))+ "," + (rightOffset - (bubbleWidth / 2))+ ")");
+            .attr("transform", "translate(" + lM + "," + rM + ")");
           var currentText = container.selectAll('text.legend-opcount.text-' + key.op);
           currentText.text(data.rawData[index][key.op]);
         }
