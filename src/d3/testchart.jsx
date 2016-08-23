@@ -193,17 +193,17 @@ const testfunction = function() {
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
         .style("display", "none");
       focus.append("line")
-        .attr("class", "line-mouse")
+        .attr("class", "overlay-line")
         .style("stroke", "black")
         .attr("transform", "translate(" + subMargin.left + ",0)")
         .attr('x1', x.range()[0]).attr("y1", y.range()[0])
         .attr("x2", x.range()[0]).attr("y2", y.range()[1]);
       focus.append("path")
-        .attr("class", "triangle-mouse")
+        .attr("class", "overlay-triangle")
         .attr("transform", "translate(" + subMargin.left + ",0)")
         .attr("d", d3.svg.symbol().type("triangle-down"));
       focus.append("text")
-        .attr("class", "text-mouse")
+        .attr("class", "overlay-date")
         .attr("transform", "translate(" + subMargin.left + ",0)")
         .style("font-size",11)
         .style("text-anchor", "middle");
@@ -212,7 +212,7 @@ const testfunction = function() {
       focus.selectAll('.focus').data(keys).enter()
         .append("circle")
         .attr("id", function(d) { return "circle" + d; })
-        .attr('class', function(d) { return "focus circle-" + d; })
+        .attr('class', function(d) { return "overlay-circle-" + d; })
         .style('fill', function(d, i) { return color(i); })
         .attr("r", 4.5);
 
@@ -241,17 +241,17 @@ const testfunction = function() {
         }
         var leftOffset = x(data.localTime[index]);
         var focus = container.selectAll('g.focus');
-        focus.selectAll('line.line-mouse')
+        focus.selectAll('line.overlay-line')
           .attr("transform", "translate(" + leftOffset + ",0)");
-        focus.selectAll('path.triangle-mouse')
+        focus.selectAll('path.overlay-triangle')
           .attr("transform", "translate(" + leftOffset + ",-5)");
-        focus.selectAll('text.text-mouse')
+        focus.selectAll('text.overlay-date')
           .attr("transform", "translate(" + leftOffset + ",-15)")
           .text(d3.time.format("%X")(data.localTime[index]));
         for (var k = 0; k < data.operations.length; k++) {
           var key = data.operations[k];
           var rightOffset = y(key.count[index]);
-          focus.selectAll('circle.circle-' + key.op)
+          focus.selectAll('circle.overlay-circle-' + key.op)
             .attr("transform", "translate(" + leftOffset + "," + rightOffset + ")");
           var currentText = container.selectAll('text.current.text-' + key.op);
           currentText.text(data.rawData[index][key.op]);
