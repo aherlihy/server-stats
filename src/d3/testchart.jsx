@@ -27,6 +27,7 @@ const testfunction = function() {
       var subMargin = {left: 20, top: 10};
       minTime = new Date(minTime.getTime() - 100000);
       var xDomain = d3.extent([minTime].concat(data.localTime));
+      var currSelection;
 
       x
         .domain(xDomain)
@@ -57,17 +58,18 @@ const testfunction = function() {
       d3.selectAll('.axis-y').call(yAxis);
 
       // Axis labels
+      currSelection = gEnter
+        .append('g')
+        .attr('class', 'axis-labels');
       [
-        {"name" : "y-label text-ops", "x": 5, "y": 15, "default": "OPS/S", "anchor": "end"},
-        {"name" : "y-label text-count", "x": 5, "y": 5, "default": "", "anchor": "end"},
-        {"name" : "x-label min", "x": (x.range()[0] + subMargin.left), "y": (-subMargin.top-5), "default": "", "anchor":"middle"},
-        {"name" : "x-label max", "x": x.range()[1], "y": (-subMargin.top-5), "default": "", "anchor":"middle"}
+        {"name" : "y-label text-ops", "x": 5, "y": 15, "default": "OPS/S"},
+        {"name" : "y-label text-count", "x": 5, "y": 5, "default": ""},
+        {"name" : "x-label min", "x": (x.range()[0] + subMargin.left), "y": (-subMargin.top-5), "default": ""},
+        {"name" : "x-label max", "x": x.range()[1], "y": (-subMargin.top-5), "default": ""}
       ].map(function(c) {
-        gEnter
+        currSelection
           .append("text")
           .attr("class", c["name"])
-          .attr("font-size",11)
-          .style("text-anchor", c["anchor"])
           .attr('transform', 'translate(' + c["x"] + ',' + c["y"]+ ')')
           .text(c["default"]);
       });
@@ -79,7 +81,7 @@ const testfunction = function() {
         .text(d3.time.format("%X")(xDomain[0]));
 
       // Border Lines
-      gEnter
+      currSelection = gEnter
         .append('g')
         .attr('class', 'background-lines');
       [
@@ -99,10 +101,9 @@ const testfunction = function() {
           "x2": x.range()[1], "y2": (y.range()[0] / 2),
           "class": "middle"}
       ].map(function(c) {
-        gEnter
+        currSelection
           .append("line")
           .attr("class", "line-" + c['class'])
-          .style('stroke', 'black')
           .attr('x1', c['x1']).attr('y1', c['y1'])
           .attr('x2', c['x2']).attr('y2', c['y2']);
       });
@@ -118,9 +119,7 @@ const testfunction = function() {
         .append('path')
         .attr('class', function(d) { return 'line line-' + d.op; })
         .attr("id", function(d) { return 'tag'+d.op; } )
-        .style("opacity", 1)
-        .attr('stroke', function(d, i) { return color(i); })
-        .attr('fill', 'none');
+        .style('stroke', function(d, i) { return color(i); });
       container.selectAll('path.line')
         .attr('d', function(d) { return line(d.count); });
 
@@ -139,12 +138,10 @@ const testfunction = function() {
         .attr('transform', function(d, i) { return 'translate(' + i*legendWidth + ',5)'; } );
       opDiv
         .append("rect")
-        .attr("class", "box")
+        .attr("class", function(d) { return "legend-box box-" + d; })
         .attr("id", function(d) { return "box" + d; })
         .style("stroke", function(d, i) { return color(i); })
         .style("fill", function(d, i) { return color(i); } )
-        .style("stroke-width", 1)
-        .style("fill-opacity", 1)
         .attr('width', 10)
         .attr('height', 10)
         .on("click", function(d, i) {
@@ -166,7 +163,7 @@ const testfunction = function() {
         .append("text")
         .attr("class", "text-name")
         .attr('transform', 'translate(' + 13 + ',9)')
-        .attr("font-size",11)
+        .style("font-size",11)
         .text(function(d) {
           if (d == 'query') {
             d = 'querie';
@@ -177,8 +174,8 @@ const testfunction = function() {
         .append("text")
         .attr("class", function(d) { return "current text-" + d; })
         .attr('transform', 'translate(' + 15 + ',25)')
-        .attr("font-size", 15)
-        .attr('fill', 'black');
+        .style("font-size", 15)
+        .style('fill', 'black');
 
       if (onOverlay) {
         updateOverlay();
@@ -208,7 +205,7 @@ const testfunction = function() {
       focus.append("text")
         .attr("class", "text-mouse")
         .attr("transform", "translate(" + subMargin.left + ",0)")
-        .attr("font-size",11)
+        .style("font-size",11)
         .style("text-anchor", "middle");
 
 
@@ -216,7 +213,7 @@ const testfunction = function() {
         .append("circle")
         .attr("id", function(d) { return "circle" + d; })
         .attr('class', function(d) { return "focus circle-" + d; })
-        .attr('fill', function(d, i) { return color(i); })
+        .style('fill', function(d, i) { return color(i); })
         .attr("r", 4.5);
 
       var overlay = container.selectAll('rect.overlay').data([0]).enter()
@@ -225,7 +222,7 @@ const testfunction = function() {
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
         .attr("width", subwidth)
         .attr("height", subheight)
-        .attr("opacity", 0)
+        .style("opacity", 0)
         .on("mouseover", function() { 
           onOverlay = true;
           focus.style("display", null);

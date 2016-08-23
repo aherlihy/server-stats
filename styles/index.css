@@ -1,10 +1,28 @@
 body {
-    background-color: #455459;
+    background-color: #43484D;
     font: 12px Arial;
 }
 .axis-x, .axis-y {
     fill: none;
 }
-.background-lines line {
+.background-lines {
     stroke: #9ca4ab;
 }
+.axis-labels {
+    font-size: 11px;
+}
+.y-label {
+    text-anchor: end;
+}
+.x-label {
+    text-anchor: middle;
+}
+.operation {
+    opacity: 1;
+    fill: none;
+}
+.legend-box {
+    stroke-width: 1px;
+    fill-opacity: 1;
+}
+
