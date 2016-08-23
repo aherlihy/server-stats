@@ -23,10 +23,10 @@ const testfunction = function() {
       var margin = {top: 30, right: 30, bottom: 50, left: 40};
       var subheight = height - margin.top - margin.bottom;
       var subwidth = width - margin.left - margin.right;
-      var minTime = data.localTime[data.localTime.length - 1];
-      var subMargin = {left: 20, top: 10};
-      minTime = new Date(minTime.getTime() - 60000);
+      var lastTime = data.localTime[data.localTime.length - 1];
+      var minTime = new Date(lastTime.getTime() - (data.maxOps*1000));
       var xDomain = d3.extent([minTime].concat(data.localTime));
+      var subMargin = {left: (subwidth / 60) * (data.maxOps - 60), top: 10};
       var currSelection;
 
       x
@@ -35,8 +35,7 @@ const testfunction = function() {
       y
         .domain(data.yDomain)
         .range([subheight, 0]);
-      xAxis.tickValues(x.domain());
-      yAxis.tickValues(y.domain());
+      var timeZero = x.invert(subMargin.left);
 
       // Axes
       var container = d3.select(this);
@@ -62,8 +61,8 @@ const testfunction = function() {
         .append('g')
         .attr('class', 'axis-labels');
       [
-        {"name" : "y-label text-ops", "x": 5, "y": 15, "default": "OPS/S"},
-        {"name" : "y-label text-count", "x": 5, "y": 5, "default": ""},
+        {"name" : "y-label text-ops", "x": subMargin.left-15, "y": 15, "default": "OPS/S"},
+        {"name" : "y-label text-count", "x": subMargin.left-15, "y": 5, "default": ""},
         {"name" : "x-label min", "x": (x.range()[0] + subMargin.left), "y": (-subMargin.top-5), "default": ""},
         {"name" : "x-label max", "x": x.range()[1], "y": (-subMargin.top-5), "default": ""}
       ].map(function(c) {
@@ -78,7 +77,7 @@ const testfunction = function() {
       container.selectAll('text.max')
         .text(d3.time.format("%X")(xDomain[1]));
       container.selectAll('text.min')
-        .text(d3.time.format("%X")(xDomain[0]));
+        .text(d3.time.format("%X")(timeZero));
 
       // Border Lines
       currSelection = gEnter
@@ -94,7 +93,7 @@ const testfunction = function() {
         { 'x1': x.range()[0]+subMargin.left, "y1": y.range()[0],
           "x2": x.range()[1], "y2": y.range()[0],
         "class": "bottom"},
-        { 'x1': x.range()[0]+subMargin.top, "y1": y.range()[1],
+        { 'x1': x.range()[0]+subMargin.left-subMargin.top, "y1": y.range()[1],
           "x2": x.range()[1], "y2": y.range()[1],
         "class": "top"},
         { "x1": x.range()[0]+subMargin.left, "y1": (y.range()[0] / 2),
@@ -107,7 +106,7 @@ const testfunction = function() {
           .attr('x1', c['x1']).attr('y1', c['y1'])
           .attr('x2', c['x2']).attr('y2', c['y2']);
       });
-  
+
       // Chart Lines
       var line = d3.svg.line()
         .interpolate("monotone")
