@@ -191,16 +191,16 @@ const testfunction = function() {
         .style("display", "none");
       focus.append("line")
         .attr("class", "overlay-line")
-        .attr("transform", "translate(" + subMargin.left + ",0)")
+        .attr("transform", "translate(" + subwidth + ",0)")
         .attr('x1', x.range()[0]).attr("y1", y.range()[0])
         .attr("x2", x.range()[0]).attr("y2", y.range()[1]);
       focus.append("path")
         .attr("class", "overlay-triangle")
-        .attr("transform", "translate(" + subMargin.left + ",0)")
+        .attr("transform", "translate(" + subwidth + ",0)")
         .attr("d", d3.svg.symbol().type("triangle-down"));
       focus.append("text")
         .attr("class", "overlay-date")
-        .attr("transform", "translate(" + subMargin.left + ",0)");
+        .attr("transform", "translate(" + subwidth + ",0)");
 
 
       focus.selectAll('.focus').data(keys).enter()
