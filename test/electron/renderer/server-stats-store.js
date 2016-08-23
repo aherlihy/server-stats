@@ -12,18 +12,18 @@ const ServerStatsStore = Reflux.createStore({
     this.dataService.connect(() => {
       this.listenTo(Actions.pollServerStats, this.serverStats);
     });
-    this.opsPerSec = {'insert': [], 'update': [], 'getmore': [], 'delete': [], 'command': [], 'query': []};
+    this.opsPerSec = {'insert': [], 'query': [], 'update': [], 'delete': [], 'command': [], 'getmore': []};
     this.rawData = [];
     this.localTime = [];
     this.currentMax = 10;
     this.starting = true;
     this.data = {'operations': [
                     {'op': 'insert', 'count': [], 'active': true, 'current': 0},
+                    {'op': 'query', 'count': [], 'active': true, 'current': 0},
                     {'op': 'update', 'count': [], 'active': true, 'current': 0},
-                    {'op': 'getmore', 'count': [], 'active': true, 'current': 0},
                     {'op': 'delete', 'count': [], 'active': true, 'current': 0},
                     {'op': 'command', 'count': [], 'active': true, 'current': 0},
-                    {'op': 'query', 'count': [], 'active': true, 'current': 0}],
+                    {'op': 'getmore', 'count': [], 'active': true, 'current': 0}],
                  'localTime': [],
                  'yDomain': [0, this.currentMax],
                  'rawData': []};

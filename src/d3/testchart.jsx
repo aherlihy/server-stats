@@ -14,7 +14,7 @@ const testfunction = function() {
     .scale(x).orient('bottom')
     .tickFormat(d3.time.format('%X'));
   var color = d3.scale.category10();
-  var keys = ['insert', 'update', 'getmore', 'delete', 'command', 'query'];
+  var keys = ['insert', 'query', 'update', 'delete', 'command', 'getmore'];
   var onOverlay = false;
   var mouseLocation = null;
   var bubbleWidth = 10;
@@ -104,7 +104,7 @@ const testfunction = function() {
       ].map(function(c) {
         currSelection
           .append("line")
-          .attr("class", "line-" + c['class'])
+          .attr("class", c['class'])
           .attr('x1', c['x1']).attr('y1', c['y1'])
           .attr('x2', c['x2']).attr('y2', c['y2']);
       });
@@ -118,9 +118,9 @@ const testfunction = function() {
       ops.enter().append('g')
         .attr('class', 'operation')
         .append('path')
-        .attr('class', function(d) { return 'line line-' + d.op; })
-        .attr("id", function(d) { return 'tag'+d.op; } )
-        .style('stroke', function(d, i) { return color(i); });
+        .attr('class', function(d) { return 'line ' + d.op; })
+        .style('fill', 'none')
+        .attr("id", function(d) { return 'tag'+d.op; } );
       container.selectAll('path.line')
         .attr('d', function(d) { return line(d.count); });
 
@@ -135,14 +135,12 @@ const testfunction = function() {
         .attr('transform', 'translate(' + (margin.left + subMargin.left) + ',' + (subheight + margin.top + subMargin.top) + ')');
       var opDiv = lEnter.selectAll('.legend').data(keys).enter()
         .append('g')
-        .attr("class", function(d) { return "legend legend-" + d; })
+        .attr("class", "subLegend")
         .attr('transform', function(d, i) { return 'translate(' + i*legendWidth + ',5)'; } );
       opDiv
         .append("rect")
-        .attr("class", function(d) { return "legend-box box-" + d; })
+        .attr("class", function(d) { return "legend-box " + d; })
         .attr("id", function(d) { return "box" + d; })
-        .style("stroke", function(d, i) { return color(i); })
-        .style("fill", function(d, i) { return color(i); } )
         .attr('width', bubbleWidth)
         .attr('height', bubbleWidth)
         .attr("rx", bubbleWidth / 5)
@@ -209,13 +207,12 @@ const testfunction = function() {
 
       focus.selectAll('.focus').data(keys).enter()
         .append("rect")
-        .attr('class', function(d) { return "overlay-bubbles box-" + d; })
+        .attr('class', function(d) { return "overlay-bubbles " + d; })
         .attr("id", function(d) { return "bubble" + d; })
         .attr('width', bubbleWidth)
         .attr('height', bubbleWidth)
         .attr("rx", bubbleWidth / 5)
-        .attr("ry", bubbleWidth / 5)
-        .style('fill', function(d, i) { return color(i); });
+        .attr("ry", bubbleWidth / 5);
 
       var overlay = container.selectAll('rect.overlay').data([0]).enter()
         .append("rect")
@@ -252,7 +249,7 @@ const testfunction = function() {
         for (var k = 0; k < data.operations.length; k++) {
           var key = data.operations[k];
           var rightOffset = y(key.count[index]);
-          focus.selectAll('rect.box-' + key.op)
+          focus.selectAll('rect.' + key.op)
             .attr("transform", "translate(" + (leftOffset - (bubbleWidth / 2))+ "," + (rightOffset - (bubbleWidth / 2))+ ")");
           var currentText = container.selectAll('text.legend-opcount.text-' + key.op);
           currentText.text(data.rawData[index][key.op]);
