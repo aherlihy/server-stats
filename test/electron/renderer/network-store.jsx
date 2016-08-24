@@ -41,6 +41,7 @@ const NetworkStore = Reflux.createStore({
         var source;
         var raw = {};
         var div = 1;
+        var precision = 2;
         for (var q = 0; q < this.data.operations.length; q++) {
           key = this.data.operations[q].op;
           source = doc.network;
@@ -48,8 +49,9 @@ const NetworkStore = Reflux.createStore({
           if (q == 2) {
             source = doc.connections;
             div = 1;
+            precision = 0;
           }
-          count = _.round(source[key] / div); // convert to KB
+          count = _.round(source[key] / div, precision); // convert to KB
 
           raw[key] = count;
           if (this.starting) { // don't add data, starting point
