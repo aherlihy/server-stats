@@ -12,13 +12,14 @@ const graphfunction = function() {
   var xAxis = d3.svg.axis()
     .scale(x).orient('bottom')
     .tickFormat(d3.time.format('%X'));
-  var keys = ['insert', 'query', 'update', 'delete', 'command', 'getmore'];
+  var keys = []; // TODO: make sure this is updating right
   var onOverlay = false;
   var mouseLocation = null;
   var bubbleWidth = 10;
 
   function chart(selection) {
     selection.each(function(data) {
+      keys = data.operations.map(function(f) { return f.op; });
       var margin = {top: 30, right: 30, bottom: 50, left: 40};
       var subHeight = height - margin.top - margin.bottom;
       var subWidth = width - margin.left - margin.right;
