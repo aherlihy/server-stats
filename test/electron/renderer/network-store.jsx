@@ -34,16 +34,12 @@ const NetworkStore = Reflux.createStore({
         var count;
         for (var q = 0; q < this.data.operations.length; q++) {
           key = this.data.operations[q].op;
-          count = doc.opcounters[key];
+          count = doc.network[key];
           if (this.starting) { // don't add data, starting point
             this.data.operations[q].current = count;
             continue;
           }
           val = count - this.data.operations[q].current;
-          if (val<0) {
-            debug("VAL WAS 0!!!");
-          }
-
           this.opsPerSec[key].push(val);
           this.data.operations[q].count = this.opsPerSec[key].slice(Math.max(this.opsPerSec[key].length - this.maxOps, 0));
           if (val > this.currentMax) {

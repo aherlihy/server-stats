@@ -18,7 +18,7 @@ const graphfunction = function() {
   var bubbleWidth = 10;
 
   function chart(selection) {
-    selection.each(function(data) {
+    selection.each(function(data) { // TODO: deal with empty data
       keys = data.operations.map(function(f) { return f.op; });
       var margin = {top: 30, right: 30, bottom: 50, left: 40};
       var subHeight = height - margin.top - margin.bottom;
