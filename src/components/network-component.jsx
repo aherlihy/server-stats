@@ -3,12 +3,13 @@
 const React = require('react');
 const Actions = require('../actions');
 const Minichart = require('./minichart');
-const debug = require('debug')('server-stats:server-stats-component');
+const debug = require('debug')('server-stats:network-component');
+
 
 /**
- * Represents the component that renders the server status information.
+ * Represents the component that renders the serverStatus['network'] information.
  */
-class ServerStatsComponent extends React.Component {
+class NetworkComponent extends React.Component {
 
   /**
    * The server stats component should be initialized with a 'store'
@@ -19,7 +20,7 @@ class ServerStatsComponent extends React.Component {
    */
   constructor(props) {
     super(props);
-    this.state = { error: null, data: {} };
+    this.state = { error: null, data: {}};
   }
 
   /**
@@ -29,10 +30,10 @@ class ServerStatsComponent extends React.Component {
    */
   componentDidMount() {
     this.unsubscribeRefresh = this.props.store.listen(this.refresh.bind(this));
-    this.intervalId = setInterval(() => {
-      // debug("***in server-stats-component, calling componentDidMount");
-      Actions.pollServerStats(); //TODO
-    }, this.props.interval);
+    // this.intervalId = setInterval(() => {
+    //   // debug("***in server-stats-component, calling componentDidMount");
+    //   Actions.pollServerStats();//TODO
+    // }, this.props.interval);
   }
 
   /**
@@ -61,10 +62,10 @@ class ServerStatsComponent extends React.Component {
    * @returns {React.Component} The component.
    */
   render() {
-    return React.createElement(
-      'div',
-      null,
-      this.state.error ? this.renderError() : this.renderGraph()
+    return (
+      <div>
+        {this.state.error ? this.renderError() : this.renderGraph()}
+      </div>
     );
   }
 
@@ -84,19 +85,20 @@ class ServerStatsComponent extends React.Component {
    */
   renderGraph() {
     if (this.state.data && 'localTime' in this.state.data) {
-      return React.createElement(
-        'div',
-        { className: 'myminichart' },
-        React.createElement(Minichart, {
-          data: this.state.data,
-          graph_type: 'sschart'
-        })
+      return (
+        <div className="networkchart">
+          <Minichart
+            data={this.state.data}
+            graph_type="sschart"
+          />
+        </div>
       );
     }
   }
 
+
 }
 
-ServerStatsComponent.displayName = 'ServerStatsComponent';
+NetworkComponent.displayName = 'NetworkComponent';
 
-module.exports = ServerStatsComponent;
+module.exports = NetworkComponent;

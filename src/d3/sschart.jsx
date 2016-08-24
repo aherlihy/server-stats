@@ -11,15 +11,19 @@ const graphfunction = function() {
   var yAxis = d3.svg.axis().scale(y).orient('left');
   var xAxis = d3.svg.axis()
     .scale(x).orient('bottom')
-    .tickFormat(d3.time.format('%X'));
-  var keys = ['insert', 'query', 'update', 'delete', 'command', 'getmore'];
+    .ticks(0);
+  var keys = []; // TODO: make sure this is updating right
   var onOverlay = false;
   var mouseLocation = null;
   var bubbleWidth = 10;
 
   function chart(selection) {
     selection.each(function(data) {
-      var margin = {top: 30, right: 30, bottom: 50, left: 40};
+      if (!('localTime' in data) || data.localTime.length == 0) {
+        return; // TODO: okay to not draw graph with bad data?
+      }
+      keys = data.operations.map(function(f) { return f.op; });
+      var margin = {top: 60, right: 30, bottom: 50, left: 40};
       var subHeight = height - margin.top - margin.bottom;
       var subWidth = width - margin.left - margin.right;
       var minTime = data.localTime[data.localTime.length - 1];
@@ -27,7 +31,7 @@ const graphfunction = function() {
       var xDomain = d3.extent([minTime].concat(data.localTime));
       var subMargin = {left: (subWidth / 60) * (data.maxOps - 60), top: 10};
       var currSelection;
-      var legendWidth = (subWidth - subMargin.top) / data.operations.length;
+      var legendWidth = (subWidth - subMargin.top) / 6;
 
       x
         .domain(xDomain)
@@ -36,14 +40,22 @@ const graphfunction = function() {
         .domain(data.yDomain)
         .range([subHeight, 0]);
       var timeZero = x.invert(subMargin.left);
-
-      // Axes
       var container = d3.select(this);
       var g = container.selectAll('g.chart').data([0]);
       var gEnter = g.enter()
         .append('g')
         .attr('class', 'chart')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+      // Title
+      gEnter
+        .append("text")
+        .attr("class", "chart-title")
+        .attr("x", (subWidth / 2))
+        .attr("y", 0 - (margin.top / 2))
+        .text(data.labels.title);
+  
+      // Axes
       gEnter
         .append('g')
         .attr('class', 'axis-x')
@@ -62,7 +74,7 @@ const graphfunction = function() {
         .attr('class', 'axis-labels');
       [
         {"name" : "y-label text-ops",
-          "x": subMargin.left-15, "y": 15, "default": "OPS/S"},
+          "x": subMargin.left-15, "y": 15, "default": data.labels.yAxis},
         {"name" : "y-label text-count",
           "x": subMargin.left-15, "y": 5, "default": ""},
         {"name" : "x-label min", "x": (x.range()[0] + subMargin.left),
@@ -140,6 +152,9 @@ const graphfunction = function() {
         .append('g')
         .attr("class", "subLegend")
         .attr('transform', function(d, i) {
+          if (d=='current') {
+            i = 4.5;
+          }
           return 'translate(' + i*legendWidth + ',5)';
         });
       opDiv
@@ -170,12 +185,7 @@ const graphfunction = function() {
         .append("text")
         .attr("class", "legend-opname")
         .attr('transform', 'translate(' + 13 + ',9)')
-        .text(function(d) {
-          if (d == 'query') {
-            d = 'querie';
-          }
-          return (d+'s').toUpperCase();
-        });
+        .text(function(d, i) {return data.labels.keys[i]; });
       opDiv
         .append("text")
         .attr("class", function(d) { return "legend-opcount text-" + d;} )

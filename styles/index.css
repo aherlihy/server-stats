@@ -5,6 +5,14 @@ body {
     text-transform: uppercase;
     color: #9ca4ab;
 }
+/*#opCounterContainer, #networkContainer, #memContainer, #globalLockContainer {*/
+    /*background-color:pink;*/
+/*}*/
+.chart-title {
+    text-anchor: middle;
+    font-size: 14px;
+    fill: #9ca4ab;
+}
 .axis-x, .axis-y {
     fill: none;
 }
@@ -52,27 +60,27 @@ body {
 .overlay-bubbles {
     stroke: none;
 }
-.insert {
-    stroke: #58DECC;
-    fill: #58DECC;
+.insert, .bytesOut, .virtual, .aReads { /* teal */
+    stroke: #45BAAB;
+    fill: #45BAAB;
 }
-.query {
-    stroke: blue;
-    fill: blue;
+.query, .bytesIn, .resident, .aWrites { /* blue */
+    stroke: #23B1FF;
+    fill: #23B1FF;
 }
-.update {
-    stroke: #9478C6;
-    fill: #9478C6;
+.update, .current, .mapped { /* purple */
+    stroke: #6F72FF;
+    fill: #6F72FF;
 }
-.delete {
+.delete, .qReads { /* red */
     stroke: #A33A35;
     fill: #A33A35;
 }
-.command {
+.command, .qWrites { /* orange */
+    stroke: #FFA900;
+    fill: #FFA900;
+}
+.getmore { /* yellow */
     stroke: #C7E82F;
     fill: #C7E82F;
-}
-.getmore {
-    stroke: #45BAAB;
-    fill: #45BAAB;
 }
