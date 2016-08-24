@@ -9,7 +9,9 @@ const OpCounterStore = Reflux.createStore({
   init: function() {
     this.listenTo(ServerStatsStore, this.opCounter);
 
-    this.opsPerSec = {'insert': [], 'query': [], 'update': [], 'delete': [], 'command': [], 'getmore': []};
+    this.opsPerSec = {
+      'insert': [], 'query': [], 'update': [],
+      'delete': [], 'command': [], 'getmore': []};
     this.rawData = [];
     this.localTime = [];
     this.currentMax = 10;
@@ -26,7 +28,10 @@ const OpCounterStore = Reflux.createStore({
       'yDomain': [0, this.currentMax],
       'rawData': [],
       'maxOps': this.maxOps,
-      'title': 'operations'
+      'labels': {
+        'title': 'operations',
+        'keys': ['inserts', 'queries', 'updates', 'deletes', 'commands', 'getmores'],
+        'yAxis': 'OPS'}
     };
   },
 

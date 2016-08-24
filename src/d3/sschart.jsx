@@ -28,7 +28,7 @@ const graphfunction = function() {
       var xDomain = d3.extent([minTime].concat(data.localTime));
       var subMargin = {left: (subWidth / 60) * (data.maxOps - 60), top: 10};
       var currSelection;
-      var legendWidth = (subWidth - subMargin.top) / data.operations.length;
+      var legendWidth = (subWidth - subMargin.top) / 6;
 
       x
         .domain(xDomain)
@@ -71,7 +71,7 @@ const graphfunction = function() {
         .attr('class', 'axis-labels');
       [
         {"name" : "y-label text-ops",
-          "x": subMargin.left-15, "y": 15, "default": "OPS/S"},
+          "x": subMargin.left-15, "y": 15, "default": data.labels.yAxis},
         {"name" : "y-label text-count",
           "x": subMargin.left-15, "y": 5, "default": ""},
         {"name" : "x-label min", "x": (x.range()[0] + subMargin.left),
@@ -149,6 +149,10 @@ const graphfunction = function() {
         .append('g')
         .attr("class", "subLegend")
         .attr('transform', function(d, i) {
+          var move = i*legendWidth;
+          if (d=='current') {
+            i = 4.5;
+          }
           return 'translate(' + i*legendWidth + ',5)';
         });
       opDiv
@@ -179,12 +183,7 @@ const graphfunction = function() {
         .append("text")
         .attr("class", "legend-opname")
         .attr('transform', 'translate(' + 13 + ',9)')
-        .text(function(d) {
-          if (d == 'query') {
-            d = 'querie';
-          }
-          return (d+'s').toUpperCase();
-        });
+        .text(function(d, i) {return data.labels.keys[i]; });
       opDiv
         .append("text")
         .attr("class", function(d) { return "legend-opcount text-" + d;} )

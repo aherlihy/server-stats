@@ -9,22 +9,26 @@ const GlobalLockStore = Reflux.createStore({
   init: function() {
     this.listenTo(ServerStatsStore, this.globalLock);
 
-    this.opsPerSec = {'insert': [], 'query': [], 'update': [], 'delete': [], 'command': [], 'getmore': []};
+    this.opsPerSec = {'Creaders': [], 'Cwriters': [], 'Areaders': [], 'Awriters': []};
     this.rawData = [];
     this.localTime = [];
     this.currentMax = 10;
     this.starting = true;
     this.maxOps = 63;
     this.data = {'operations': [
-      {'op': 'active reads', 'count': [], 'active': true},
-      {'op': 'active writes', 'count': [], 'active': true},
-      {'op': 'queued reads', 'count': [], 'active': true},
-      {'op': 'queued writes', 'count': [], 'active': true}],
+      {'op': 'Creaders', 'count': [], 'active': true},
+      {'op': 'Cwriters', 'count': [], 'active': true},
+      {'op': 'Areaders', 'count': [], 'active': true},
+      {'op': 'Awriters', 'count': [], 'active': true}],
       'localTime': [],
       'yDomain': [0, this.currentMax],
       'rawData': [],
       'maxOps': this.maxOps,
-      'title': 'read & write'
+      'labels': {
+        'title': 'read & write',
+        'keys': ['active reads', 'active writes', 'queued reads', 'queued writes'],
+        'yAxis': ""
+      }
     };
   },
 

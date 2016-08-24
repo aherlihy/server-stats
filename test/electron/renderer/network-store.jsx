@@ -9,7 +9,7 @@ const NetworkStore = Reflux.createStore({
   init: function() {
     this.listenTo(ServerStatsStore, this.network);
 
-    this.opsPerSec = {'bytesIn': [], 'bytesOut': [], 'numRequests': []};
+    this.opsPerSec = {'bytesIn': [], 'bytesOut': [], 'current': []};
     this.rawData = [];
     this.localTime = [];
     this.currentMax = 10;
@@ -18,12 +18,16 @@ const NetworkStore = Reflux.createStore({
     this.data = {'operations': [
       {'op': 'bytesIn', 'count': [], 'active': true},
       {'op': 'bytesOut', 'count': [], 'active': true},
-      {'op': 'numRequests', 'count': [], 'active': true}],
+      {'op': 'current', 'count': [], 'active': true}],
       'localTime': [],
       'yDomain': [0, this.currentMax],
       'rawData': [],
       'maxOps': this.maxOps,
-      'title': 'network'
+      'labels': {
+        'title': 'network',
+        'keys': ['net in', 'net out', 'connections'],
+        'yAxis': 'KB'
+      }
     };
   },
 
@@ -32,9 +36,19 @@ const NetworkStore = Reflux.createStore({
         var key;
         var val;
         var count;
+        var source;
+        var raw = {};
+        var div = 1;
         for (var q = 0; q < this.data.operations.length; q++) {
           key = this.data.operations[q].op;
-          count = doc.network[key];
+          source = doc.network;
+          div = 1000;
+          if (q == 2) {
+            source = doc.connections;
+            div = 1;
+          }
+          count = source[key] / div; // convert to KB
+          raw[key] = count;
           if (this.starting) { // don't add data, starting point
             this.data.operations[q].current = count;
             continue;
@@ -51,7 +65,7 @@ const NetworkStore = Reflux.createStore({
           this.starting = false;
           return;
         }
-        this.rawData.push(doc.opcounters);
+        this.rawData.push(raw);
         this.data.yDomain = [0, this.currentMax];
         this.localTime.push(doc.localTime);
         this.data.localTime = this.localTime.slice(Math.max(this.localTime.length - this.maxOps, 0));

@@ -9,7 +9,7 @@ const MemStore = Reflux.createStore({
   init: function() {
     this.listenTo(ServerStatsStore, this.mem);
 
-    this.opsPerSec = {'insert': [], 'query': [], 'update': [], 'delete': [], 'command': [], 'getmore': []};
+    this.opsPerSec = {'virtual': [], 'resident': [], 'mapped': []};
     this.rawData = [];
     this.localTime = [];
     this.currentMax = 10;
@@ -23,7 +23,7 @@ const MemStore = Reflux.createStore({
       'yDomain': [0, this.currentMax],
       'rawData': [],
       'maxOps': this.maxOps,
-      'title': 'memory'
+      'labels': {'title': 'memory', 'keys': ['vsize', 'resident', 'mapped'], 'yAxis': 'GB'}
     };
   },
 
