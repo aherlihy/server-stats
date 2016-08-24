@@ -30,10 +30,10 @@ class NetworkComponent extends React.Component {
    */
   componentDidMount() {
     this.unsubscribeRefresh = this.props.store.listen(this.refresh.bind(this));
-    this.intervalId = setInterval(() => {
-      // debug("***in server-stats-component, calling componentDidMount");
-      Actions.pollServerStats();//TODO
-    }, this.props.interval);
+    // this.intervalId = setInterval(() => {
+    //   // debug("***in server-stats-component, calling componentDidMount");
+    //   Actions.pollServerStats();//TODO
+    // }, this.props.interval);
   }
 
   /**

@@ -31,8 +31,7 @@ class OpCountersComponent extends React.Component {
   componentDidMount() {
     this.unsubscribeRefresh = this.props.store.listen(this.refresh.bind(this));
     this.intervalId = setInterval(() => {
-      // debug("***in server-stats-component, calling componentDidMount");
-      Actions.pollServerStats();//TODO
+      Actions.pollServerStats();//TODO, call from here?
     }, this.props.interval);
   }
 

@@ -30,9 +30,9 @@ class GlobalLockComponent extends React.Component {
    */
   componentDidMount() {
     this.unsubscribeRefresh = this.props.store.listen(this.refresh.bind(this));
-    this.intervalId = setInterval(() => {
-      Actions.pollServerStats();//TODO
-    }, this.props.interval);
+    // this.intervalId = setInterval(() => {
+    //   Actions.pollServerStats();//TODO
+    // }, this.props.interval);
   }
 
   /**
