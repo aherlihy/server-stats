@@ -82,13 +82,12 @@ class ServerStatsComponent extends React.Component {
    * @todo: Implement.
    */
   renderGraph() {
-    // return 'SERVER-STATS=' + JSON.stringify(this.state.data, null, 2);
     if (this.state.data && 'localTime' in this.state.data) {
       return (
         <div className="myminichart">
           <Minichart
             data={this.state.data} // expects data to be an array of opcounters objs
-            graph_type="testchart"
+            graph_type="sschart"
           />
         </div>
       );

@@ -3,8 +3,6 @@ const _ = require('lodash');
 const D3Component = require('./d3component');
 const vizFns = require('../d3');
 
-// const debug = require('debug')('mongodb-compass:schema:minichart');
-
 const Minichart = React.createClass({
 
   propTypes: {

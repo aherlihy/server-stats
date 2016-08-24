@@ -3,8 +3,6 @@ const ReactDOM = require('react-dom');
 const d3 = require('d3');
 const _ = require('lodash');
 
-// const debug = require('debug')('mongodb-compass:schema:d3component');
-
 const D3Component = React.createClass({
 
     propTypes: {
