@@ -8,7 +8,7 @@ const ReactDOM = require('react-dom');
 // const CurrentOpComponent = require('../../../index').CurrentOpComponent;
 // const CurrentOpStore = require('./current-op-store');
 
-const ServerStatsComponent = require('../../../index').ServerStatsComponent;
+const OpCountersComponent = require('../../../index').OpCountersComponent;
 
 // const TopComponent = require('../../../index').TopComponent;
 // const TopStore = require('./top-store');
@@ -21,7 +21,7 @@ const OpCountersStore = require('./opcounters-store');
 //   document.getElementById('currentOpContainer') // eslint-disable-line no-undef
 // );
 ReactDOM.render(
-    React.createElement(ServerStatsComponent, { store: OpCountersStore, interval: 1000 }),
+    React.createElement(OpCountersComponent, { store: OpCountersStore, interval: 1000 }),
     document.getElementById('serverStatsContainer') // eslint-disable-line no-undef
 );
 // ReactDOM.render(

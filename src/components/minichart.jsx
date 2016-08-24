@@ -60,7 +60,7 @@ const Minichart = React.createClass({
   render() {
     const minichart = this.state.containerWidth ? this.minichartFactory() : null;
     return (
-      <div ref="minichart">
+      <div ref="minichart" className="minichart">
         {minichart}
       </div>
     );

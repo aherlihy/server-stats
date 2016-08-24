@@ -3,13 +3,13 @@
 const React = require('react');
 const Actions = require('../actions');
 const Minichart = require('./minichart');
-const debug = require('debug')('server-stats:server-stats-component');
+const debug = require('debug')('server-stats:opcounters-component');
 
 
 /**
- * Represents the component that renders the server status information.
+ * Represents the component that renders the serverStatus['opcounters'] information.
  */
-class ServerStatsComponent extends React.Component {
+class OpCountersComponent extends React.Component {
 
   /**
    * The server stats component should be initialized with a 'store'
@@ -86,7 +86,7 @@ class ServerStatsComponent extends React.Component {
   renderGraph() {
     if (this.state.data && 'localTime' in this.state.data) {
       return (
-        <div className="myminichart">
+        <div className="opcounterschart">
           <Minichart
             data={this.state.data}
             graph_type="sschart"
@@ -99,6 +99,6 @@ class ServerStatsComponent extends React.Component {
 
 }
 
-ServerStatsComponent.displayName = 'ServerStatsComponent';
+OpCountersComponent.displayName = 'OpCountersComponent';
 
-module.exports = ServerStatsComponent;
+module.exports = OpCountersComponent;
