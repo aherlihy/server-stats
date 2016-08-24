@@ -149,7 +149,6 @@ const graphfunction = function() {
         .append('g')
         .attr("class", "subLegend")
         .attr('transform', function(d, i) {
-          var move = i*legendWidth;
           if (d=='current') {
             i = 4.5;
           }

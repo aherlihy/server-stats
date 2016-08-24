@@ -38,11 +38,11 @@ ReactDOM.render(
   React.createElement(NetworkComponent, { store: NetworkStore, interval: 1000 }),
   document.getElementById('networkContainer') // eslint-disable-line no-undef
 );
-ReactDOM.render(
-  React.createElement(MemComponent, { store: MemStore, interval: 1000 }),
-  document.getElementById('memContainer') // eslint-disable-line no-undef
-);
-ReactDOM.render(
-  React.createElement(GlobalLockComponent, { store: GlobalLockStore, interval: 1000 }),
-  document.getElementById('globalLockContainer') // eslint-disable-line no-undef
-);
+// ReactDOM.render(
+//   React.createElement(MemComponent, { store: MemStore, interval: 1000 }),
+//   document.getElementById('memContainer') // eslint-disable-line no-undef
+// );
+// ReactDOM.render(
+//   React.createElement(GlobalLockComponent, { store: GlobalLockStore, interval: 1000 }),
+//   document.getElementById('globalLockContainer') // eslint-disable-line no-undef
+// );

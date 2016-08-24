@@ -68,7 +68,7 @@ body {
     stroke: #23B1FF;
     fill: #23B1FF;
 }
-.update, .numRequests {
+.update, .current {
     stroke: #6F72FF;
     fill: #6F72FF;
 }

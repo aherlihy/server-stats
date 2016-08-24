@@ -16,9 +16,9 @@ const NetworkStore = Reflux.createStore({
     this.starting = true;
     this.maxOps = 63;
     this.data = {'operations': [
-      {'op': 'bytesIn', 'count': [], 'active': true},
-      {'op': 'bytesOut', 'count': [], 'active': true},
-      {'op': 'current', 'count': [], 'active': true}],
+      {'op': 'bytesIn', 'count': [], 'active': true, 'current': 0},
+      {'op': 'bytesOut', 'count': [], 'active': true, 'current': 0},
+      {'op': 'current', 'count': [], 'active': true, 'current': 0}],
       'localTime': [],
       'yDomain': [0, this.currentMax],
       'rawData': [],
@@ -47,13 +47,14 @@ const NetworkStore = Reflux.createStore({
             source = doc.connections;
             div = 1;
           }
-          count = source[key] / div; // convert to KB
+          count = (source[key] / div).toFixed(2); // convert to KB
+          debug("count", count);
           raw[key] = count;
           if (this.starting) { // don't add data, starting point
             this.data.operations[q].current = count;
             continue;
           }
-          val = count - this.data.operations[q].current;
+          val = (count - this.data.operations[q].current).toFixed(2);
           this.opsPerSec[key].push(val);
           this.data.operations[q].count = this.opsPerSec[key].slice(Math.max(this.opsPerSec[key].length - this.maxOps, 0));
           if (val > this.currentMax) {
