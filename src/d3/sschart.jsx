@@ -11,7 +11,7 @@ const graphfunction = function() {
   var yAxis = d3.svg.axis().scale(y).orient('left');
   var xAxis = d3.svg.axis()
     .scale(x).orient('bottom')
-    .tickFormat(d3.time.format('%X'));
+    .ticks(0);
   var keys = []; // TODO: make sure this is updating right
   var onOverlay = false;
   var mouseLocation = null;
@@ -23,7 +23,7 @@ const graphfunction = function() {
         return; // TODO: okay to not draw graph with bad data?
       }
       keys = data.operations.map(function(f) { return f.op; });
-      var margin = {top: 30, right: 30, bottom: 50, left: 40};
+      var margin = {top: 60, right: 30, bottom: 50, left: 40};
       var subHeight = height - margin.top - margin.bottom;
       var subWidth = width - margin.left - margin.right;
       var minTime = data.localTime[data.localTime.length - 1];
@@ -53,7 +53,7 @@ const graphfunction = function() {
         .attr("class", "chart-title")
         .attr("x", (subWidth / 2))
         .attr("y", 0 - (margin.top / 2))
-        .text(data.title);
+        .text(data.labels.title);
   
       // Axes
       gEnter

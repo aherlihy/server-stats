@@ -3,6 +3,7 @@
 const Reflux = require('reflux');
 const ServerStatsStore = require('./server-stats-store');
 const debug = require('debug')('server-stats:opcounter-store');
+const  _ = require('lodash');
 
 const NetworkStore = Reflux.createStore({
 
@@ -31,6 +32,7 @@ const NetworkStore = Reflux.createStore({
     };
   },
 
+
   network: function(error, doc) {
       if (!error && doc) {
         var key;
@@ -47,14 +49,14 @@ const NetworkStore = Reflux.createStore({
             source = doc.connections;
             div = 1;
           }
-          count = (source[key] / div).toFixed(2); // convert to KB
-          debug("count", count);
+          count = _.round(source[key] / div); // convert to KB
+
           raw[key] = count;
           if (this.starting) { // don't add data, starting point
             this.data.operations[q].current = count;
             continue;
           }
-          val = (count - this.data.operations[q].current).toFixed(2);
+          val = _.round(count - this.data.operations[q].current);
           this.opsPerSec[key].push(val);
           this.data.operations[q].count = this.opsPerSec[key].slice(Math.max(this.opsPerSec[key].length - this.maxOps, 0));
           if (val > this.currentMax) {

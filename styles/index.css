@@ -10,7 +10,7 @@ body {
 /*}*/
 .chart-title {
     text-anchor: middle;
-    font-size: 16px;
+    font-size: 14px;
     fill: #9ca4ab;
 }
 .axis-x, .axis-y {
@@ -60,27 +60,27 @@ body {
 .overlay-bubbles {
     stroke: none;
 }
-.insert, .bytesOut {
+.insert, .bytesOut, .virtual { /* teal */
     stroke: #45BAAB;
     fill: #45BAAB;
 }
-.query, .bytesIn {
+.query, .bytesIn, .resident { /* blue */
     stroke: #23B1FF;
     fill: #23B1FF;
 }
-.update, .current {
+.update, .current, .mapped { /* purple */
     stroke: #6F72FF;
     fill: #6F72FF;
 }
-.delete {
+.delete { /* red */
     stroke: #A33A35;
     fill: #A33A35;
 }
-.command {
+.command { /* orange */
     stroke: #FFA900;
     fill: #FFA900;
 }
-.getmore {
+.getmore { /* yellow */
     stroke: #C7E82F;
     fill: #C7E82F;
 }
