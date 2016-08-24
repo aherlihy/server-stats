@@ -8,10 +8,9 @@ const graphfunction = function() {
   var height = 300;
   var x = d3.time.scale();
   var y = d3.scale.linear();
-  var yAxis = d3.svg.axis().scale(y).orient('left');
-  var xAxis = d3.svg.axis()
-    .scale(x).orient('bottom')
-    .ticks(0);
+  var connectionY = d3.scale.linear(); // TODO: scale for connection differently
+  var yAxis = d3.svg.axis().scale(y).orient('left').ticks(0);
+  var xAxis = d3.svg.axis().scale(x).orient('bottom').ticks(0);
   var keys = []; // TODO: make sure this is updating right
   var onOverlay = false;
   var mouseLocation = null;
