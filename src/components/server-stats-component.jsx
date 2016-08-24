@@ -3,6 +3,7 @@
 const React = require('react');
 const Actions = require('../actions');
 const Minichart = require('./minichart');
+const debug = require('debug')('server-stats:server-stats-component');
 
 
 /**
@@ -30,7 +31,8 @@ class ServerStatsComponent extends React.Component {
   componentDidMount() {
     this.unsubscribeRefresh = this.props.store.listen(this.refresh.bind(this));
     this.intervalId = setInterval(() => {
-      Actions.pollServerStats();
+      // debug("***in server-stats-component, calling componentDidMount");
+      Actions.pollServerStats();//TODO
     }, this.props.interval);
   }
 
@@ -86,7 +88,7 @@ class ServerStatsComponent extends React.Component {
       return (
         <div className="myminichart">
           <Minichart
-            data={this.state.data} // expects data to be an array of opcounters objs
+            data={this.state.data}
             graph_type="sschart"
           />
         </div>
