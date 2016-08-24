@@ -14,7 +14,7 @@ const OpCounterStore = Reflux.createStore({
       'delete': [], 'command': [], 'getmore': []};
     this.rawData = [];
     this.localTime = [];
-    this.currentMax = 10;
+    this.currentMax = 1;
     this.starting = true;
     this.maxOps = 63;
     this.data = {'operations': [

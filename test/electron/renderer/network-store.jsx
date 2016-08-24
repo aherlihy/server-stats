@@ -13,13 +13,13 @@ const NetworkStore = Reflux.createStore({
     this.opsPerSec = {'bytesIn': [], 'bytesOut': [], 'current': []};
     this.rawData = [];
     this.localTime = [];
-    this.currentMax = 10;
+    this.currentMax = 1;
     this.starting = true;
     this.maxOps = 63;
     this.data = {'operations': [
-      {'op': 'bytesIn', 'count': [], 'active': true, 'current': 0},
-      {'op': 'bytesOut', 'count': [], 'active': true, 'current': 0},
-      {'op': 'current', 'count': [], 'active': true, 'current': 0}],
+      {'op': 'bytesIn', 'count': [], 'active': true},
+      {'op': 'bytesOut', 'count': [], 'active': true},
+      {'op': 'current', 'count': [], 'active': true}],
       'localTime': [],
       'yDomain': [0, this.currentMax],
       'rawData': [],

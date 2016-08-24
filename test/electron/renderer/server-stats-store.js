@@ -4,7 +4,7 @@ const Reflux = require('reflux');
 const DataService = require('mongodb-data-service');
 const connection = require('./connection');
 const Actions = require('../../../index').Actions;
-const debug = require('debug')('server-stats:server-stats-store');
+// const debug = require('debug')('server-stats:server-stats-store');
 
 const ServerStatsStore = Reflux.createStore({
 
