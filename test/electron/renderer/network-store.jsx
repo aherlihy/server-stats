@@ -25,7 +25,9 @@ const NetworkStore = Reflux.createStore({
       'localTime': [],
       'yDomain': [0, this.currentMax],
       'rawData': [],
-      'maxOps': this.maxOps};
+      'maxOps': this.maxOps,
+      'title': 'network'
+    };
   },
 
   network: function(error, doc) {
@@ -41,6 +43,10 @@ const NetworkStore = Reflux.createStore({
             continue;
           }
           val = count - this.data.operations[q].current;
+          if (val<0) {
+            debug("VAL WAS 0!!!");
+          }
+
           this.opsPerSec[key].push(val);
           this.data.operations[q].count = this.opsPerSec[key].slice(Math.max(this.opsPerSec[key].length - this.maxOps, 0));
           if (val > this.currentMax) {

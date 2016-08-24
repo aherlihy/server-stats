@@ -37,14 +37,22 @@ const graphfunction = function() {
         .domain(data.yDomain)
         .range([subHeight, 0]);
       var timeZero = x.invert(subMargin.left);
-
-      // Axes
       var container = d3.select(this);
       var g = container.selectAll('g.chart').data([0]);
       var gEnter = g.enter()
         .append('g')
         .attr('class', 'chart')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+      // Title
+      gEnter
+        .append("text")
+        .attr("class", "chart-title")
+        .attr("x", (subWidth / 2))
+        .attr("y", 0 - (margin.top / 2))
+        .text(data.title);
+  
+      // Axes
       gEnter
         .append('g')
         .attr('class', 'axis-x')

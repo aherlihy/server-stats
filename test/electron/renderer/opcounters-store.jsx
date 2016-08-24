@@ -25,7 +25,9 @@ const OpCounterStore = Reflux.createStore({
       'localTime': [],
       'yDomain': [0, this.currentMax],
       'rawData': [],
-      'maxOps': this.maxOps};
+      'maxOps': this.maxOps,
+      'title': 'operations'
+    };
   },
 
   opCounter: function(error, doc) {

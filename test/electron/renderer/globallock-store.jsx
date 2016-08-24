@@ -25,7 +25,9 @@ const GlobalLockStore = Reflux.createStore({
       'localTime': [],
       'yDomain': [0, this.currentMax],
       'rawData': [],
-      'maxOps': this.maxOps};
+      'maxOps': this.maxOps,
+      'title': 'read & write'
+    };
   },
 
   globalLock: function(error, doc) {
