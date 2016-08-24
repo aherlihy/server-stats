@@ -5,6 +5,10 @@ body {
     text-transform: uppercase;
     color: #9ca4ab;
 }
+/*#opCounterContainer, #networkContainer, #memContainer, #globalLockContainer {*/
+    /*background-color:pink;*/
+/*}*/
+
 .axis-x, .axis-y {
     fill: none;
 }
