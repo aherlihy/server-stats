@@ -60,11 +60,11 @@ body {
 .overlay-bubbles {
     stroke: none;
 }
-.insert, .bytesOut, .virtual { /* teal */
+.insert, .bytesOut, .virtual, .aReads { /* teal */
     stroke: #45BAAB;
     fill: #45BAAB;
 }
-.query, .bytesIn, .resident { /* blue */
+.query, .bytesIn, .resident, .aWrites { /* blue */
     stroke: #23B1FF;
     fill: #23B1FF;
 }
@@ -72,11 +72,11 @@ body {
     stroke: #6F72FF;
     fill: #6F72FF;
 }
-.delete { /* red */
+.delete, .qReads { /* red */
     stroke: #A33A35;
     fill: #A33A35;
 }
-.command { /* orange */
+.command, .qWrites { /* orange */
     stroke: #FFA900;
     fill: #FFA900;
 }
