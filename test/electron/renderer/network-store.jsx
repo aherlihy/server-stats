@@ -9,19 +9,16 @@ const NetworkStore = Reflux.createStore({
   init: function() {
     this.listenTo(ServerStatsStore, this.network);
 
-    this.opsPerSec = {'insert': [], 'query': [], 'update': [], 'delete': [], 'command': [], 'getmore': []};
+    this.opsPerSec = {'bytesIn': [], 'bytesOut': [], 'numRequests': []};
     this.rawData = [];
     this.localTime = [];
     this.currentMax = 10;
     this.starting = true;
     this.maxOps = 63;
     this.data = {'operations': [
-      {'op': 'insert', 'count': [], 'active': true},
-      {'op': 'query', 'count': [], 'active': true},
-      {'op': 'update', 'count': [], 'active': true},
-      {'op': 'delete', 'count': [], 'active': true},
-      {'op': 'command', 'count': [], 'active': true},
-      {'op': 'getmore', 'count': [], 'active': true}],
+      {'op': 'bytesIn', 'count': [], 'active': true},
+      {'op': 'bytesOut', 'count': [], 'active': true},
+      {'op': 'numRequests', 'count': [], 'active': true}],
       'localTime': [],
       'yDomain': [0, this.currentMax],
       'rawData': [],

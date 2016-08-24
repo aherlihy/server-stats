@@ -16,12 +16,12 @@ const OpCounterStore = Reflux.createStore({
     this.starting = true;
     this.maxOps = 63;
     this.data = {'operations': [
-      {'op': 'insert', 'count': [], 'active': true},
-      {'op': 'query', 'count': [], 'active': true},
-      {'op': 'update', 'count': [], 'active': true},
-      {'op': 'delete', 'count': [], 'active': true},
-      {'op': 'command', 'count': [], 'active': true},
-      {'op': 'getmore', 'count': [], 'active': true}],
+      {'op': 'insert', 'count': [], 'active': true, 'current': 0},
+      {'op': 'query', 'count': [], 'active': true, 'current': 0},
+      {'op': 'update', 'count': [], 'active': true, 'current': 0},
+      {'op': 'delete', 'count': [], 'active': true, 'current': 0},
+      {'op': 'command', 'count': [], 'active': true, 'current': 0},
+      {'op': 'getmore', 'count': [], 'active': true, 'current': 0}],
       'localTime': [],
       'yDomain': [0, this.currentMax],
       'rawData': [],
