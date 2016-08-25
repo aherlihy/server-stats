@@ -27,7 +27,7 @@ const GlobalLockStore = Reflux.createStore({
       'labels': {
         'title': 'read & write',
         'keys': ['active reads', 'active writes', 'queued reads', 'queued writes'],
-        'yAxis': ""
+        'yAxis': ''
       }
     };
   },

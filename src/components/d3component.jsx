@@ -67,7 +67,7 @@ const D3Component = React.createClass({
     render() {
         const container = this._getContainer();
         return (
-            <div ref="wrapper" className="d3component">
+            <div ref='wrapper' className='d3component'>
                 {container}
             </div>
         );

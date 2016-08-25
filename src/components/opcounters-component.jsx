@@ -85,10 +85,10 @@ class OpCountersComponent extends React.Component {
   renderGraph() {
     if (this.state.data && 'localTime' in this.state.data) {
       return (
-        <div className="opcounterschart">
+        <div className='opcounterschart'>
           <Minichart
             data={this.state.data}
-            graph_type="statschart"
+            graph_type='statschart'
           />
         </div>
       );

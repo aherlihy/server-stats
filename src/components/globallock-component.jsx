@@ -81,10 +81,10 @@ class GlobalLockComponent extends React.Component {
   renderGraph() {
     if (this.state.data && 'localTime' in this.state.data) {
       return (
-        <div className="globallockchart">
+        <div className='globallockchart'>
           <Minichart
             data={this.state.data}
-            graph_type="statschart"
+            graph_type='statschart'
           />
         </div>
       );

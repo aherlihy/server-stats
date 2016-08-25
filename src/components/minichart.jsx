@@ -49,7 +49,7 @@ const Minichart = React.createClass({
     return (
       <D3Component
         data={this.props.data}
-        renderMode="svg"
+        renderMode='svg'
         width={650}
         height={300}
         d3fn={fn}
@@ -60,7 +60,7 @@ const Minichart = React.createClass({
   render() {
     const minichart = this.state.containerWidth ? this.minichartFactory() : null;
     return (
-      <div ref="minichart" className="minichart">
+      <div ref='minichart' className='minichart'>
         {minichart}
       </div>
     );

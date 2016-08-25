@@ -81,10 +81,10 @@ class NetworkComponent extends React.Component {
   renderGraph() {
     if (this.state.data && 'localTime' in this.state.data) {
       return (
-        <div className="networkchart">
+        <div className='networkchart'>
           <Minichart
             data={this.state.data}
-            graph_type="statschart"
+            graph_type='statschart'
           />
         </div>
       );
