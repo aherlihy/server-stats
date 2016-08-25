@@ -10,10 +10,7 @@ const ReactDOM = require('react-dom');
 // const TopComponent = require('../../../index').TopComponent;
 // const TopStore = require('./top-store');
 
-const OpCountersComponent = require('../../../index').OpCountersComponent;
-const NetworkComponent = require('../../../index').NetworkComponent;
-const MemComponent = require('../../../index').MemComponent;
-const GlobalLockComponent = require('../../../index').GlobalLockComponent;
+const ChartComponent = require('../../../index').ChartComponent;
 
 
 const OpCountersStore = require('./opcounters-store');
@@ -31,18 +28,18 @@ const GlobalLockStore = require('./globallock-store');
 //     document.getElementById('topContainer') // eslint-disable-line no-undef
 // );
 ReactDOM.render(
-    React.createElement(OpCountersComponent, { store: OpCountersStore, interval: 1000 }),
+    React.createElement(ChartComponent, { chartname: 'OpCounter', store: OpCountersStore, interval: 1000 }),
     document.getElementById('opCounterContainer') // eslint-disable-line no-undef
 );
 ReactDOM.render(
-  React.createElement(NetworkComponent, { store: NetworkStore, interval: 1000 }),
+  React.createElement(ChartComponent, { chartname: 'Network', store: NetworkStore, interval: 1000 }),
   document.getElementById('networkContainer') // eslint-disable-line no-undef
 );
 ReactDOM.render(
-  React.createElement(MemComponent, { store: MemStore, interval: 1000 }),
+  React.createElement(ChartComponent, { chartname: 'Mem', store: MemStore, interval: 1000 }),
   document.getElementById('memContainer') // eslint-disable-line no-undef
 );
 ReactDOM.render(
-  React.createElement(GlobalLockComponent, { store: GlobalLockStore, interval: 1000 }),
+  React.createElement(ChartComponent, { chartname: 'GobalLock', store: GlobalLockStore, interval: 1000 }),
   document.getElementById('globalLockContainer') // eslint-disable-line no-undef
 );

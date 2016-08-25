@@ -1,15 +1,14 @@
 'use strict';
 
 const React = require('react');
-const Actions = require('../actions');
 const Minichart = require('./minichart');
-const debug = require('debug')('server-stats:opcounters-component');
+const debug = require('debug')('server-stats:chart-component');
 
 
 /**
- * Represents the component that renders the serverStatus['opcounters'] information.
+ * Represents the component that renders serverStatus charts.
  */
-class OpCountersComponent extends React.Component {
+class ChartComponent extends React.Component {
 
   /**
    * The server stats component should be initialized with a 'store'
@@ -30,9 +29,6 @@ class OpCountersComponent extends React.Component {
    */
   componentDidMount() {
     this.unsubscribeRefresh = this.props.store.listen(this.refresh.bind(this));
-    this.intervalId = setInterval(() => {
-      Actions.pollServerStats();//TODO, call from here?
-    }, this.props.interval);
   }
 
   /**
@@ -83,21 +79,19 @@ class OpCountersComponent extends React.Component {
    * @todo: Implement.
    */
   renderGraph() {
-    if (this.state.data && 'localTime' in this.state.data) {
-      return (
-        <div className="opcounterschart">
-          <Minichart
-            data={this.state.data}
-            graph_type="sschart"
-          />
-        </div>
-      );
-    }
-  }
+    return (
+      <div className={this.props.chartname}>
+        <Minichart
+          data={this.state.data}
+          graph_type='stats-chart'
+        />
+      </div>
+    );
+}
 
 
 }
 
-OpCountersComponent.displayName = 'OpCountersComponent';
+ChartComponent.displayName = 'ChartComponent';
 
-module.exports = OpCountersComponent;
+module.exports = ChartComponent;

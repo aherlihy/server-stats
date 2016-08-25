@@ -13,6 +13,9 @@ const ServerStatsStore = Reflux.createStore({
     this.dataService.connect(() => {
       this.listenTo(Actions.pollServerStats, this.serverStats);
     });
+    this.intervalId = setInterval(() => {
+      Actions.pollServerStats(); // TODO, call from here?
+    }, 1000);
   },
 
   serverStats: function() {
