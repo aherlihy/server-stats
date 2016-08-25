@@ -18,9 +18,14 @@ const graphfunction = function() {
   var subHeight = height - margin.top - margin.bottom;
   var subWidth = width - margin.left - margin.right;
 
-  function drawError(gEnter) {
+  function drawError() {
     var message = 'Error: bad data given to graph.';
-    gEnter
+    var container = d3.select(this);
+    var g = container.selectAll('g.chart').data([0]);
+    g.enter()
+      .append('g')
+      .attr('class', 'chart')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
       .append('text')
       .attr('class', 'error-message')
       .attr('x', (subWidth / 2))
@@ -30,6 +35,11 @@ const graphfunction = function() {
 
   function chart(selection) {
     selection.each(function(data) {
+      // Handle bad data
+      if (!('localTime' in data) || data.localTime.length === 0) { // TODO: handle more types of bad data
+        return drawError();
+      }
+
       // Create chart
       var container = d3.select(this);
       var g = container.selectAll('g.chart').data([0]);
@@ -37,11 +47,6 @@ const graphfunction = function() {
         .append('g')
         .attr('class', 'chart')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-      // Handle bad data
-      if (!('localTime' in data) || data.localTime.length === 0) { // TODO: handle more types of bad data
-        return drawError(gEnter);
-      }
 
       // Setup
       keys = data.operations.map(function(f) { return f.op; });
