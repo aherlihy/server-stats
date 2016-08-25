@@ -18,7 +18,7 @@ const graphfunction = function() {
   function chart(selection) {
     selection.each(function(data) {
       if (!('localTime' in data) || data.localTime.length === 0) {
-        return; // TODO: okay to not draw graph with bad data?
+        return null; // TODO: okay to not draw graph with bad data?
       }
       keys = data.operations.map(function(f) { return f.op; });
       var margin = {top: 60, right: 30, bottom: 50, left: 40};
@@ -143,7 +143,7 @@ const graphfunction = function() {
         .append('path')
         .attr('class', function(d) { return 'line ' + d.op; })
         .style('fill', 'none')
-        .attr('id', function(d) { return 'tag'+d.op; } );
+        .attr('id', function(d) { return 'tag' + d.op; } );
       container.selectAll('path.line')
         .attr('d', function(d) { return line(d.count); });
 
@@ -161,10 +161,10 @@ const graphfunction = function() {
         .append('g')
         .attr('class', 'subLegend')
         .attr('transform', function(d, i) {
-          if (d==='current') {
+          if (d === 'current') {
             i = 4.5;
           }
-          return 'translate(' + i*legendWidth + ',5)';
+          return 'translate(' + i * legendWidth + ',5)';
         });
       opDiv
         .append('rect')
@@ -174,18 +174,18 @@ const graphfunction = function() {
         .attr('height', bubbleWidth)
         .attr('rx', bubbleWidth / 5)
         .attr('ry', bubbleWidth / 5)
-        
+
         .on('click', function(d, i) {
           var currOp = data.operations[i];
-          var active = currOp.active ? false : true,
-            newOpacity = active ? 1 : 0;
-          d3.select('#tag'+d)
+          var active = currOp.active ? false : true;
+          var newOpacity = active ? 1 : 0;
+          d3.select('#tag' + d)
             .transition().duration(100)
             .style('opacity', newOpacity);
-          d3.select('#box'+d)
+          d3.select('#box' + d)
             .transition().duration(100)
             .style('fill-opacity', newOpacity);
-          d3.select('#bubble'+d)
+          d3.select('#bubble' + d)
             .transition().duration(100)
             .style('opacity', newOpacity);
           currOp.active = active;
@@ -199,15 +199,6 @@ const graphfunction = function() {
         .append('text')
         .attr('class', function(d) { return 'legend-opcount text-' + d;} )
         .attr('transform', 'translate(' + 15 + ',25)');
-
-      if (onOverlay) {
-        updateOverlay();
-      } else {
-        container.selectAll('text.legend-opcount')
-          .text(function (d) {
-            return data.rawData[data.rawData.length - 1][d];
-          });
-      }
 
       // Overlays
       var focus = container.selectAll('g.focus').data([0]).enter()
@@ -238,31 +229,16 @@ const graphfunction = function() {
         .attr('rx', bubbleWidth / 5)
         .attr('ry', bubbleWidth / 5);
 
-      container.selectAll('rect.overlay').data([0]).enter()
-        .append('rect')
-        .attr('class', 'overlay')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-        .attr('width', subWidth)
-        .attr('height', subHeight)
-        .style('opacity', 0)
-        .on('mouseover', function() { 
-          onOverlay = true;
-          focus.style('display', null);
-        })
-        .on('mouseout', function() {
-          onOverlay = false;
-          focus.style('display', 'none');
-        })
-        .on('mousemove', mousemove);
-
       function updateOverlay() {
-        var bisectDate = d3.bisector(function(d) { return d; }).left;
+        var bisectDate = d3.bisector(function (d) {
+          return d;
+        }).left;
         var index = bisectDate(data.localTime, x.invert(mouseLocation), 1);
         if (index >= data.localTime.length) {
           return;
         }
         var leftOffset = x(data.localTime[index]);
-        var focus = container.selectAll('g.focus');
+        focus = container.selectAll('g.focus');
         focus.selectAll('line.overlay-line')
           .attr('transform', 'translate(' + leftOffset + ',0)');
         focus.selectAll('path.overlay-triangle')
@@ -270,7 +246,10 @@ const graphfunction = function() {
         focus.selectAll('text.overlay-date')
           .attr('transform', 'translate(' + leftOffset + ',-15)')
           .text(d3.time.format('%X')(data.localTime[index]));
-        var key, rightOffset, lM, rM;
+        var key;
+        var rightOffset;
+        var lM;
+        var rM;
         for (var k = 0; k < data.operations.length; k++) {
           key = data.operations[k];
           rightOffset = y(key.count[index]);
@@ -283,9 +262,35 @@ const graphfunction = function() {
         }
       }
 
-      function mousemove() {
+      function mouseMove() {
         mouseLocation = d3.mouse(this)[0];
         updateOverlay();
+      }
+
+      container.selectAll('rect.overlay').data([0]).enter()
+        .append('rect')
+        .attr('class', 'overlay')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+        .attr('width', subWidth)
+        .attr('height', subHeight)
+        .style('opacity', 0)
+        .on('mouseover', function() {
+          onOverlay = true;
+          focus.style('display', null);
+        })
+        .on('mouseout', function() {
+          onOverlay = false;
+          focus.style('display', 'none');
+        })
+        .on('mousemove', mouseMove);
+
+      if (onOverlay) {
+        updateOverlay();
+      } else {
+        container.selectAll('text.legend-opcount')
+          .text(function(d) {
+            return data.rawData[data.rawData.length - 1][d];
+          });
       }
     });
   }

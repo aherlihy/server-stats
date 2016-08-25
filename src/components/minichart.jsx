@@ -1,5 +1,4 @@
 const React = require('react');
-const _ = require('lodash');
 const D3Component = require('./d3component');
 const vizFns = require('../d3');
 
@@ -45,7 +44,7 @@ const Minichart = React.createClass({
 
   minichartFactory() {
     /* eslint camelcase: 0 */
-    fn = vizFns[this.props.graph_type];
+    var fn = vizFns[this.props.graph_type];
     return (
       <D3Component
         data={this.props.data}

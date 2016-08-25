@@ -1,7 +1,6 @@
 'use strict';
 
 const React = require('react');
-const Actions = require('../actions');
 const Minichart = require('./minichart');
 const debug = require('debug')('server-stats:globallock-component');
 
@@ -84,7 +83,7 @@ class GlobalLockComponent extends React.Component {
         <div className='globallockchart'>
           <Minichart
             data={this.state.data}
-            graph_type='statschart'
+            graph_type='stats-chart'
           />
         </div>
       );

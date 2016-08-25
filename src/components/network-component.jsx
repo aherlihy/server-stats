@@ -1,7 +1,6 @@
 'use strict';
 
 const React = require('react');
-const Actions = require('../actions');
 const Minichart = require('./minichart');
 const debug = require('debug')('server-stats:network-component');
 
@@ -84,7 +83,7 @@ class NetworkComponent extends React.Component {
         <div className='networkchart'>
           <Minichart
             data={this.state.data}
-            graph_type='statschart'
+            graph_type='stats-chart'
           />
         </div>
       );
