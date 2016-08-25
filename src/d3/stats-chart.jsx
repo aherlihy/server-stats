@@ -1,5 +1,5 @@
 const d3 = require('d3');
-const debug = require('debug')('server-stats:sschart');
+const debug = require('debug')('server-stats:stats-chart');
 const  _ = require('lodash');
 
 const graphfunction = function() {

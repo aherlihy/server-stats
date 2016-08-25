@@ -30,9 +30,6 @@ class GlobalLockComponent extends React.Component {
    */
   componentDidMount() {
     this.unsubscribeRefresh = this.props.store.listen(this.refresh.bind(this));
-    // this.intervalId = setInterval(() => {
-    //   Actions.pollServerStats();//TODO
-    // }, this.props.interval);
   }
 
   /**
@@ -41,7 +38,6 @@ class GlobalLockComponent extends React.Component {
    */
   componentWillUnmount() {
     this.unsubscribeRefresh();
-    clearInterval(this.intervalId);
   }
 
   /**
@@ -88,7 +84,7 @@ class GlobalLockComponent extends React.Component {
         <div className="globallockchart">
           <Minichart
             data={this.state.data}
-            graph_type="sschart"
+            graph_type="statschart"
           />
         </div>
       );

@@ -88,7 +88,7 @@ class OpCountersComponent extends React.Component {
         <div className="opcounterschart">
           <Minichart
             data={this.state.data}
-            graph_type="sschart"
+            graph_type="statschart"
           />
         </div>
       );

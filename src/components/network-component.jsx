@@ -30,10 +30,6 @@ class NetworkComponent extends React.Component {
    */
   componentDidMount() {
     this.unsubscribeRefresh = this.props.store.listen(this.refresh.bind(this));
-    // this.intervalId = setInterval(() => {
-    //   // debug("***in server-stats-component, calling componentDidMount");
-    //   Actions.pollServerStats();//TODO
-    // }, this.props.interval);
   }
 
   /**
@@ -42,7 +38,6 @@ class NetworkComponent extends React.Component {
    */
   componentWillUnmount() {
     this.unsubscribeRefresh();
-    clearInterval(this.intervalId);
   }
 
   /**
@@ -89,7 +84,7 @@ class NetworkComponent extends React.Component {
         <div className="networkchart">
           <Minichart
             data={this.state.data}
-            graph_type="sschart"
+            graph_type="statschart"
           />
         </div>
       );
