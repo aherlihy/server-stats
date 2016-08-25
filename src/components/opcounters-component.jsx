@@ -1,7 +1,6 @@
 'use strict';
 
 const React = require('react');
-const Actions = require('../actions');
 const Minichart = require('./minichart');
 const debug = require('debug')('server-stats:opcounters-component');
 
@@ -30,9 +29,6 @@ class OpCountersComponent extends React.Component {
    */
   componentDidMount() {
     this.unsubscribeRefresh = this.props.store.listen(this.refresh.bind(this));
-    this.intervalId = setInterval(() => {
-      Actions.pollServerStats();//TODO, call from here?
-    }, this.props.interval);
   }
 
   /**
