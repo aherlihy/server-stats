@@ -230,7 +230,7 @@ const graphfunction = function() {
         .attr('ry', bubbleWidth / 5);
 
       function updateOverlay() {
-        var bisectDate = d3.bisector(function (d) {
+        var bisectDate = d3.bisector(function(d) {
           return d;
         }).left;
         var index = bisectDate(data.localTime, x.invert(mouseLocation), 1);
