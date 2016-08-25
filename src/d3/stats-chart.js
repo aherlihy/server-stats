@@ -14,16 +14,37 @@ const graphfunction = function() {
   var onOverlay = false;
   var mouseLocation = null;
   var bubbleWidth = 10;
+  var margin = {top: 60, right: 30, bottom: 50, left: 40};
+  var subHeight = height - margin.top - margin.bottom;
+  var subWidth = width - margin.left - margin.right;
+
+  function drawError(gEnter) {
+    var message = 'Error: bad data given to graph.';
+    gEnter
+      .append('text')
+      .attr('class', 'error-message')
+      .attr('x', (subWidth / 2))
+      .attr('y', (subHeight / 2))
+      .text(message);
+  }
 
   function chart(selection) {
     selection.each(function(data) {
-      if (!('localTime' in data) || data.localTime.length === 0) {
-        return null; // TODO: okay to not draw graph with bad data?
+      // Create chart
+      var container = d3.select(this);
+      var g = container.selectAll('g.chart').data([0]);
+      var gEnter = g.enter()
+        .append('g')
+        .attr('class', 'chart')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+      // Handle bad data
+      if (!('localTime' in data) || data.localTime.length === 0) { // TODO: handle more types of bad data
+        return drawError(gEnter);
       }
+
+      // Setup
       keys = data.operations.map(function(f) { return f.op; });
-      var margin = {top: 60, right: 30, bottom: 50, left: 40};
-      var subHeight = height - margin.top - margin.bottom;
-      var subWidth = width - margin.left - margin.right;
       var minTime = data.localTime[data.localTime.length - 1];
       minTime = new Date(minTime.getTime() - (data.maxOps * 1000));
       var xDomain = d3.extent([minTime].concat(data.localTime));
@@ -38,12 +59,6 @@ const graphfunction = function() {
         .domain(data.yDomain)
         .range([subHeight, 0]);
       var timeZero = x.invert(subMargin.left);
-      var container = d3.select(this);
-      var g = container.selectAll('g.chart').data([0]);
-      var gEnter = g.enter()
-        .append('g')
-        .attr('class', 'chart')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
       // Title
       gEnter
@@ -141,7 +156,7 @@ const graphfunction = function() {
         .enter().append('g')
         .attr('class', 'operation')
         .append('path')
-        .attr('class', function(d) { return 'line ' + d.op; })
+        .attr('class', function(d, i) { return 'line chart-color-' + i; })
         .style('fill', 'none')
         .attr('id', function(d) { return 'tag' + d.op; } );
       container.selectAll('path.line')
@@ -168,7 +183,7 @@ const graphfunction = function() {
         });
       opDiv
         .append('rect')
-        .attr('class', function(d) { return 'legend-box ' + d; })
+        .attr('class', function(d, i) { return 'legend-box chart-color-' + i; })
         .attr('id', function(d) { return 'box' + d; })
         .attr('width', bubbleWidth)
         .attr('height', bubbleWidth)
@@ -222,7 +237,7 @@ const graphfunction = function() {
 
       focus.selectAll('.focus').data(keys).enter()
         .append('rect')
-        .attr('class', function(d) { return 'overlay-bubbles ' + d; })
+        .attr('class', function(d, i) { return 'overlay-bubbles chart-color-' + i; })
         .attr('id', function(d) { return 'bubble' + d; })
         .attr('width', bubbleWidth)
         .attr('height', bubbleWidth)
@@ -255,7 +270,7 @@ const graphfunction = function() {
           rightOffset = y(key.count[index]);
           lM = leftOffset - (bubbleWidth / 2);
           rM = rightOffset - (bubbleWidth / 2);
-          focus.selectAll('rect.' + key.op)
+          focus.selectAll('rect.chart-color-' + k)
             .attr('transform', 'translate(' + lM + ',' + rM + ')');
           var currentText = container.selectAll('text.legend-opcount.text-' + key.op);
           currentText.text(data.rawData[index][key.op]);
